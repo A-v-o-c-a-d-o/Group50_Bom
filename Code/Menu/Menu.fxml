@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Code.Menu.Menu">
+   <children>
+      <Button fx:id="startBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="266.0" layoutY="158.0" mnemonicParsing="false" onMouseClicked="#onStartBtnClicked" prefHeight="34.0" prefWidth="110.0" text="Start" textAlignment="CENTER">
+         <font>
+            <Font name="Britannic Bold" size="24.0" />
+         </font>
+      </Button>
+      <Label alignment="CENTER" layoutX="85.0" layoutY="64.0" prefHeight="70.0" prefWidth="472.0" text="Bomberman" textAlignment="CENTER">
+         <font>
+            <Font name="Britannic Bold" size="50.0" />
+         </font>
+      </Label>
+      <Button fx:id="scoreBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="266.0" layoutY="210.0" mnemonicParsing="false" onMouseClicked="#onScoreBtnClicked" prefHeight="34.0" prefWidth="110.0" text="Scores" textAlignment="CENTER">
+         <font>
+            <Font name="Britannic Bold" size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="settingBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="266.0" layoutY="262.0" mnemonicParsing="false" onMouseClicked="#onSettingClicked" prefHeight="34.0" prefWidth="110.0" text="Setting" textAlignment="CENTER">
+         <font>
+            <Font name="Britannic Bold" size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="helpBtn" alignment="CENTER" contentDisplay="CENTER" layoutX="266.0" layoutY="312.0" mnemonicParsing="false" onMouseClicked="#onHelpClicked" prefHeight="34.0" prefWidth="110.0" text="Help" textAlignment="CENTER">
+         <font>
+            <Font name="Britannic Bold" size="24.0" />
+         </font>
+      </Button>
+      <AnchorPane fx:id="actionPane" prefHeight="400.0" prefWidth="640.0" visible="false" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+   </children>
+</AnchorPane>
