@@ -1,8 +1,9 @@
-package Code.App.Entity.Moveable;
+package Code.Entity.Moveable;
 
 import javafx.scene.image.Image;
 
 public class Player extends Moveable {
+    public int health = 3;
 
     public Player() {
         super();
@@ -19,6 +20,6 @@ public class Player extends Moveable {
         imgRight = new Image("./Resources/icons/player_right.png");
         imgUp = new Image("./Resources/icons/player_up.png");
         imgDown = new Image("./Resources/icons/player_down.png");
-        imgDead = new Image("./Resources/icons/player_dead.png");
+        imgDead = new Image("./Resources/icons/player_dead1.png");
     }
 }
