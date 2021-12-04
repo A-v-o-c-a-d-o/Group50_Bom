@@ -148,15 +148,17 @@ public class Game {
         playPane.getChildren().addAll(canvas, playPausePane, pauseBtn, health1, health2, health3);
     }
 
+    /** khởi tạo game mới */
     public Game() {
         // khởi tạo các chế độ
         setupMenuPane();
         setupPlayPane();
-        
+
         // mặc định
         scene = new Scene(menuPane);
+        scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
     }
-    
+
     public Scene getScene() {
         return scene;
     }

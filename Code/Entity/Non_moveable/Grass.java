@@ -7,6 +7,5 @@ public class Grass extends Non_moveable {
         super(x, y);
         prevent = false;
         image = new Image("./Resources/icons/grass.png");
-    }
-    
+    }   
 }

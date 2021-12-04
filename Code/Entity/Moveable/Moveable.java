@@ -11,7 +11,7 @@ public abstract class Moveable extends Entity {
     protected Image imgUp;
     protected Image imgDown;
     protected Image imgDead;
-    
+
     public Moveable() {
         image = imgDown;
         prevent = false;

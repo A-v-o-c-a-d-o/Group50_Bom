@@ -7,7 +7,8 @@ public class Player extends Moveable {
 
     public Player() {
         super();
-        imgLeft = new Image("./Resources/icons/player_left.png");
+        imgLeft = new Image("file: player_left.png");
+        //imgLeft = new Image("./Resources/icons/player_left.png");
         imgRight = new Image("./Resources/icons/player_right.png");
         imgUp = new Image("./Resources/icons/player_up.png");
         imgDown = new Image("./Resources/icons/player_down.png");

@@ -9,6 +9,7 @@ public class Main extends Application {
         try {
             Game game = new Game();
             stage.setScene(game.getScene());
+            stage.setTitle("Bom");
             stage.show();
         } catch (Exception e) {
             System.out.print(e.getMessage());
