@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 import Code.Entity.Moveable.Moveable;
 import Code.Entity.Moveable.Player;
+import Code.Entity.Non_moveable.Grass;
 import Code.Entity.Non_moveable.Non_moveable;
+import Code.Entity.Non_moveable.Wall;
+import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -14,6 +17,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 
@@ -21,12 +25,31 @@ public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
     private Scene scene;
     Non_moveable[][] map = new Non_moveable[HEIGHT][WIDTH];
-    Player player = new Player(0, 0);
+    Player player = new Player(CELLS_SIZE, CELLS_SIZE);
     List<Moveable> enemys = new ArrayList<>();
+
+    /** main loop */
+    AnimationTimer loop = new AnimationTimer() {
+        @Override
+        public void handle(long arg0) {
+            // clear
+            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+            
+            // draw
+            for (int i = 0; i < HEIGHT; i++)
+                for (int j = 0; j < WIDTH; j++)
+                    if (map[i][j] != null)
+                        map[i][j].render(gc);
+
+            player.render(gc);
+
+            enemys.forEach(i -> i.render(gc));
+        }
+    };
 
     /** play */
     private AnchorPane playPane, playPausePane;
-    private Canvas canvas = new Canvas(600, 360);
+    private Canvas canvas = new Canvas(CELLS_SIZE*WIDTH, CELLS_SIZE*HEIGHT);
     private GraphicsContext gc = canvas.getGraphicsContext2D();
     private Button pauseBtn, resumeBtn, fromPlayToMenuBtn, restartBtn;
     private ImageView health1, health2, health3;
@@ -80,6 +103,7 @@ public class Game {
             public void handle(MouseEvent event) {
                 try {
                     scene.setRoot(playPane);
+                    loop.start();
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
                 }
@@ -148,24 +172,65 @@ public class Game {
         playPane.getChildren().addAll(canvas, playPausePane, pauseBtn, health1, health2, health3);
     }
 
-    /** khởi tạo game mới */
-    public Game() {
-        // khởi tạo các chế độ
+    private void setupGame() {
+        // khởi tạo các màn hình hiển thị
         setupMenuPane();
         setupPlayPane();
 
         // mặc định
         scene = new Scene(menuPane);
         scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
+        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+            @Override
+            public void handle(KeyEvent event) {
+                switch (event.getCode()) {
+                    case LEFT:
+                        player.moveLeft(map);
+                        break;
+                    case RIGHT:
+                        player.moveRight(map);
+                        break;
+                    case UP:
+                        player.moveUp(map);
+                        break;
+                    case DOWN:
+                        player.moveDown(map);
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        
+        // khởi tạo map trống
+        for (int i = 0; i < HEIGHT; i++)
+            for (int j = 0; j < WIDTH; j++)
+                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
+                    map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
+                } else {
+                    map[i][j] = new Grass(j*CELLS_SIZE, i*CELLS_SIZE);
+                }
+    }
+
+    /** khởi tạo đối tượng game */
+    public Game() {
+        setupGame();        
     }
 
     public Scene getScene() {
         return scene;
     }
 
-    public void start() {}
+    private void start() {
+        setupGame();
+        loop.start();
+    }
 
-    public void pause() {}
+    private void pause() {
+        loop.stop();
+    }
 
-    public void run() {}
+    private void run() {
+        loop.start();
+    }
 }
