@@ -24,6 +24,7 @@ import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    private int speed;
     private Scene scene;
     Non_moveable[][] map;
     Player player;
@@ -207,6 +208,8 @@ public class Game {
     }
 
     private void setupGame() {
+        // cài tốc độ player
+        speed = 2;
         // khởi tạo main loop
         loop = new AnimationTimer() {
             @Override
@@ -228,6 +231,7 @@ public class Game {
 
         // khởi tạo player
         player = new Player(CELLS_SIZE, CELLS_SIZE);
+        player.setStep(speed);
         
         // khởi tạo map trống
         map = new Non_moveable[HEIGHT][WIDTH];
