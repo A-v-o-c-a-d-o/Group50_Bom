@@ -20,44 +20,34 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
     private Scene scene;
-    Non_moveable[][] map = new Non_moveable[HEIGHT][WIDTH];
-    Player player = new Player(CELLS_SIZE, CELLS_SIZE);
-    List<Moveable> enemys = new ArrayList<>();
+    Non_moveable[][] map;
+    Player player;
+    List<Moveable> enemys;
 
     /** main loop */
-    AnimationTimer loop = new AnimationTimer() {
-        @Override
-        public void handle(long arg0) {
-            // clear
-            gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-            
-            // draw
-            for (int i = 0; i < HEIGHT; i++)
-                for (int j = 0; j < WIDTH; j++)
-                    if (map[i][j] != null)
-                        map[i][j].render(gc);
-
-            player.render(gc);
-
-            enemys.forEach(i -> i.render(gc));
-        }
-    };
+    AnimationTimer loop;
 
     /** play */
     private AnchorPane playPane, playPausePane;
-    private Canvas canvas = new Canvas(CELLS_SIZE*WIDTH, CELLS_SIZE*HEIGHT);
-    private GraphicsContext gc = canvas.getGraphicsContext2D();
+    private Canvas canvas;
+    private GraphicsContext gc;
     private Button pauseBtn, resumeBtn, fromPlayToMenuBtn, restartBtn;
     private ImageView health1, health2, health3;
+
+    /** help */
+    AnchorPane helpPane;
+    Button helpUpBtn, helpDownBtn, helpLeftBtn, helpRightBtn, helpSpaceBtn, BTMenu;
+    Label helpUp, helpDown, helpLeft, helpRight, helpSpace, helpBottomTitle, tutorial;
 
     /** menu */
     private AnchorPane menuPane;
     private Label menuNameGameLabel;
-    private Button menuHelpBtn, menuScoreBtn, menuSettingBtn, PlayBtn;
+    private Button menuHelpBtn, menuScoreBtn, menuSettingBtn, menuPlayBtn;
 
     /** tạo Button dễ hơn */
     private Button newButton(String text, double preX, double preY, double layoutX, double layoutY) {
@@ -92,13 +82,24 @@ public class Game {
         menuNameGameLabel = newLabel("Bomberman", 640, 100, 0, 100);
 
         menuHelpBtn = newButton("Help", 120, 30, 260, 320);
+        menuHelpBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    scene.setRoot(helpPane);
+                    loop.start();
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        });
 
         menuScoreBtn = newButton("Score", 120, 30, 260, 280);
 
         menuSettingBtn = newButton("Setting", 120, 30, 260, 240);
 
-        PlayBtn = newButton("Play", 120, 30, 260, 200);
-        PlayBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+        menuPlayBtn = newButton("Play", 120, 30, 260, 200);
+        menuPlayBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 try {
@@ -112,7 +113,7 @@ public class Game {
         
         menuPane = new AnchorPane();
         menuPane.setPrefSize(640, 400);
-        menuPane.getChildren().addAll(menuHelpBtn, menuScoreBtn, menuSettingBtn, PlayBtn, menuNameGameLabel);
+        menuPane.getChildren().addAll(menuHelpBtn, menuScoreBtn, menuSettingBtn, menuPlayBtn, menuNameGameLabel);
     }
 
     private void setupPlayPane() {
@@ -121,8 +122,10 @@ public class Game {
         health2 = newImageView(hearthIcon, 20, 20, 580, 380);
         health3 = newImageView(hearthIcon, 20, 20, 560, 380);
 
+        canvas = new Canvas(CELLS_SIZE*WIDTH, CELLS_SIZE*HEIGHT);
         canvas.setLayoutX(20);
         canvas.setLayoutY(20);
+        gc = canvas.getGraphicsContext2D();
 
         pauseBtn = newButton("", 20, 20, 620, 0);
         pauseBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -156,7 +159,6 @@ public class Game {
             @Override
             public void handle(MouseEvent event) {
                 scene.setRoot(menuPane);
-                pause();
             }
         });
 
@@ -172,12 +174,86 @@ public class Game {
         playPane.getChildren().addAll(canvas, playPausePane, pauseBtn, health1, health2, health3);
     }
 
+    private void setupHelpPane() {
+        tutorial = newLabel("Tutorial",166, 50, 213, 29);
+        tutorial.setFont(new Font("Franklin Gothic Heavy", 42));
+
+        helpUpBtn = newButton("^", 44, 31, 150, 118);
+        helpDownBtn = newButton("v", 44, 31, 150, 149);
+        helpLeftBtn = newButton("v", 44, 31, 106, 149);
+        helpRightBtn = newButton("v", 44, 31, 194, 149);
+        helpSpaceBtn = newButton("", 187, 31, 74, 215);
+
+        helpUp = newLabel("Press button '^' to go up ", 174, 21, 351, 95);
+        helpDown = newLabel("Press button 'v' to go up ", 194, 21, 351, 123);
+        helpLeft = newLabel("Press button '<' to go up ", 180, 21, 351, 180);
+        helpRight = newLabel("Press button '>' to go up ", 187, 21, 351, 154);
+        helpSpace = newLabel("Press button SPACE to drop your bomb", 278, 21, 300, 220);
+        helpBottomTitle = newLabel("You must kill all the enemies to win this game!", 426, 27, 107, 308);
+        helpBottomTitle.setFont(new Font("Book Antiqua", 20));
+
+        BTMenu = newButton("Back to menu", 120, 31, 476, 361);
+        BTMenu.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                scene.setRoot(menuPane);
+                pause();
+            }
+        });
+
+        helpPane = new AnchorPane();
+        helpPane.setPrefSize(640, 400);
+        helpPane.getChildren().addAll(tutorial, helpUpBtn, helpDownBtn, helpLeftBtn, helpRightBtn, helpSpaceBtn, helpUp, helpDown, helpLeft, helpRight, helpSpace, helpBottomTitle, BTMenu);
+    }
+
     private void setupGame() {
+        // khởi tạo main loop
+        loop = new AnimationTimer() {
+            @Override
+            public void handle(long arg0) {
+                // clear
+                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                
+                // draw
+                for (int i = 0; i < HEIGHT; i++)
+                    for (int j = 0; j < WIDTH; j++)
+                        if (map[i][j] != null)
+                            map[i][j].render(gc);
+    
+                player.render(gc);
+    
+                enemys.forEach(i -> i.render(gc));
+            }
+        };
+
+        // khởi tạo player
+        player = new Player(CELLS_SIZE, CELLS_SIZE);
+        
+        // khởi tạo map trống
+        map = new Non_moveable[HEIGHT][WIDTH];
+        for (int i = 0; i < HEIGHT; i++)
+            for (int j = 0; j < WIDTH; j++)
+                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
+                    map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
+                } else {
+                    map[i][j] = new Grass(j*CELLS_SIZE, i*CELLS_SIZE);
+                }
+        
+        // khởi tạo kẻ địch
+        enemys = new ArrayList<>();
+    }
+
+    /** khởi tạo đối tượng game */
+    public Game() {
         // khởi tạo các màn hình hiển thị
         setupMenuPane();
         setupPlayPane();
+        setupHelpPane();
 
-        // mặc định
+        // khởi tạo game
+        setupGame();
+        
+        // setup main scene
         scene = new Scene(menuPane);
         scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
         scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
@@ -201,20 +277,6 @@ public class Game {
                 }
             }
         });
-        
-        // khởi tạo map trống
-        for (int i = 0; i < HEIGHT; i++)
-            for (int j = 0; j < WIDTH; j++)
-                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
-                    map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
-                } else {
-                    map[i][j] = new Grass(j*CELLS_SIZE, i*CELLS_SIZE);
-                }
-    }
-
-    /** khởi tạo đối tượng game */
-    public Game() {
-        setupGame();        
     }
 
     public Scene getScene() {
