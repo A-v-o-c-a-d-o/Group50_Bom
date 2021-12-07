@@ -48,21 +48,25 @@ public abstract class Moveable extends Entity {
     }
 
     public void moveLeft(Non_moveable[][] map) {
+        image = imgLeft;
         if (canMoveLeft(map))
             x--;
     }
 
     public void moveRight(Non_moveable[][] map) {
+        image = imgRight;
         if (canMoveRight(map))
             x++;
     }
 
     public void moveUp(Non_moveable[][] map) {
+        image = imgUp;
         if (canMoveUp(map))
             y--;
     }
 
     public void moveDown(Non_moveable[][] map) {
+        image = imgDown;
         if (canMoveDown(map))
             y++;
     }
