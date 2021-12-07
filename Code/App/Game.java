@@ -1,7 +1,11 @@
 package Code.App;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
+import Code.Entity.Bom;
 import Code.Entity.Moveable.Moveable;
 import Code.Entity.Moveable.Player;
 import Code.Entity.Non_moveable.Grass;
@@ -29,6 +33,7 @@ public class Game {
     Non_moveable[][] map;
     Player player;
     List<Moveable> enemys;
+    Queue<Bom> boms;
 
     /** main loop */
     AnimationTimer loop;
@@ -210,22 +215,29 @@ public class Game {
     private void setupGame() {
         // cài tốc độ player
         speed = 2;
+
         // khởi tạo main loop
         loop = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
-                // clear
-                gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                
-                // draw
-                for (int i = 0; i < HEIGHT; i++)
-                    for (int j = 0; j < WIDTH; j++)
-                        if (map[i][j] != null)
-                            map[i][j].render(gc);
-    
-                player.render(gc);
-    
-                enemys.forEach(i -> i.render(gc));
+                try {
+                    // clear
+                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                    while (!boms.isEmpty() && System.currentTimeMillis() - boms.peek().getTimeExplode() > 0)
+                        boms.remove();
+                    
+                    // draw
+                    for (int i = 0; i < HEIGHT; i++)
+                        for (int j = 0; j < WIDTH; j++)
+                            if (map[i][j] != null)
+                                map[i][j].render(gc);
+        
+                    player.render(gc);
+                    boms.forEach(i -> i.render(gc));
+                    enemys.forEach(i -> i.render(gc));
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
             }
         };
 
@@ -243,8 +255,8 @@ public class Game {
                     map[i][j] = new Grass(j*CELLS_SIZE, i*CELLS_SIZE);
                 }
         
-        // khởi tạo kẻ địch
         enemys = new ArrayList<>();
+        boms = new LinkedList<>();
     }
 
     /** khởi tạo đối tượng game */
@@ -275,6 +287,10 @@ public class Game {
                         break;
                     case DOWN:
                         player.moveDown(map);
+                        break;
+                    case SPACE:
+                        boms.add(new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
+                                ((player.getY()+CELLS_SIZE/2)/CELLS_SIZE) * CELLS_SIZE));
                         break;
                     default:
                         break;
