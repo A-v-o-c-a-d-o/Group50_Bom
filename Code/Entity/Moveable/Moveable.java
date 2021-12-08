@@ -2,10 +2,10 @@ package Code.Entity.Moveable;
 
 import Code.App.Game;
 import Code.Entity.Entity;
-import Code.Entity.Non_moveable.Non_moveable;
 import javafx.scene.image.Image;
 
 public abstract class Moveable extends Entity {
+    protected int health;
     protected int step;
     protected Image imgLeft;
     protected Image imgRight;
@@ -15,6 +15,7 @@ public abstract class Moveable extends Entity {
 
     public Moveable(int x, int y) {
         super(x, y);
+        this.health = 1;
         this.prevent = false;
         this.step = 1;
         this.x = x;
@@ -25,51 +26,60 @@ public abstract class Moveable extends Entity {
         this.step = step;
     }
 
-    private boolean checkPoint(Non_moveable[][] map, int x, int y) {
-        return !map[y / Game.CELLS_SIZE][x / Game.CELLS_SIZE].prevent;
+    private boolean checkPoint(Entity[][] map, int x, int y) {
+        return map[y / Game.CELLS_SIZE][x / Game.CELLS_SIZE] == null
+            || !map[y / Game.CELLS_SIZE][x / Game.CELLS_SIZE].prevent;
     }
     
-    private boolean canMoveLeft(Non_moveable[][] map) {
+    private boolean canMoveLeft(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5) - step, y + Game.CELLS_SIZE/5)
             && checkPoint(map, x + (Game.CELLS_SIZE/5) - step, y + 4*Game.CELLS_SIZE/5);
     }
 
-    private boolean canMoveRight(Non_moveable[][] map) {
+    private boolean canMoveRight(Entity[][] map) {
         return checkPoint(map, x + (4*Game.CELLS_SIZE/5) + step, y + Game.CELLS_SIZE/5)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5) + step, y + 4*Game.CELLS_SIZE/5);
     }
 
-    private boolean canMoveUp(Non_moveable[][] map) {
+    private boolean canMoveUp(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5), y + (Game.CELLS_SIZE/5) - step)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5), y + (Game.CELLS_SIZE/5) - step);
     }
 
-    private boolean canMoveDown(Non_moveable[][] map) {
+    private boolean canMoveDown(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5), y + (4*Game.CELLS_SIZE/5) + step)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5), y + (4*Game.CELLS_SIZE/5) + step);
     }
 
-    public void moveLeft(Non_moveable[][] map) {
+    public void moveLeft(Entity[][] map) {
         image = imgLeft;
         if (canMoveLeft(map))
             x -= step;
     }
 
-    public void moveRight(Non_moveable[][] map) {
+    public void moveRight(Entity[][] map) {
         image = imgRight;
         if (canMoveRight(map))
             x += step;
     }
 
-    public void moveUp(Non_moveable[][] map) {
+    public void moveUp(Entity[][] map) {
         image = imgUp;
         if (canMoveUp(map))
             y -= step;
     }
 
-    public void moveDown(Non_moveable[][] map) {
+    public void moveDown(Entity[][] map) {
         image = imgDown;
         if (canMoveDown(map))
             y += step;
+    }
+
+    public void die() {
+        health--;
+        if (health < 1) {
+            image = imgDead;
+            alive = false;
+        }
     }
 }

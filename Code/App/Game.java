@@ -1,16 +1,13 @@
 package Code.App;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Queue;
-
-import Code.Entity.Bom;
+import Code.Entity.Entity;
 import Code.Entity.Moveable.Moveable;
 import Code.Entity.Moveable.Player;
-import Code.Entity.Non_moveable.Grass;
-import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
+import Code.Entity.ShortLife.Bom;
+import Code.Entity.ShortLife.Fire;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -28,12 +25,12 @@ import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    private int igniteRange;
     private int speed;
     private Scene scene;
-    Non_moveable[][] map;
+    Entity[][] map;
     Player player;
     List<Moveable> enemys;
-    Queue<Bom> boms;
 
     /** main loop */
     AnimationTimer loop;
@@ -213,27 +210,41 @@ public class Game {
     }
 
     private void setupGame() {
-        // cài tốc độ player
         speed = 2;
+        igniteRange = 1;
 
         // khởi tạo main loop
         loop = new AnimationTimer() {
             @Override
             public void handle(long arg0) {
                 try {
-                    // clear
+                    if (!player.isAlive())
+                        end();
                     gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
-                    while (!boms.isEmpty() && System.currentTimeMillis() - boms.peek().getTimeExplode() > 0)
-                        boms.remove();
-                    
-                    // draw
+                    for (Moveable i: enemys)
+                        if (!i.isAlive())
+                            enemys.remove(i);
+
+                    // map
                     for (int i = 0; i < HEIGHT; i++)
                         for (int j = 0; j < WIDTH; j++)
                             if (map[i][j] != null)
-                                map[i][j].render(gc);
-        
+                                if (map[i][j].isAlive()) {
+                                    map[i][j].update();
+                                    map[i][j].render(gc);
+                                } else {
+                                    if (map[i][j] instanceof Bom) {
+                                        ignite(i, j);
+                                    } else map[i][j] = null;
+                                }
+                    
+                    // health symbol
+                    health1.setVisible(player.getHealth() >= 1);
+                    health2.setVisible(player.getHealth() >= 2);
+                    health3.setVisible(player.getHealth() >= 3);
+                    
+                    // moveable
                     player.render(gc);
-                    boms.forEach(i -> i.render(gc));
                     enemys.forEach(i -> i.render(gc));
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
@@ -244,19 +255,16 @@ public class Game {
         // khởi tạo player
         player = new Player(CELLS_SIZE, CELLS_SIZE);
         player.setStep(speed);
-        
+
         // khởi tạo map trống
-        map = new Non_moveable[HEIGHT][WIDTH];
+        map = new Entity[HEIGHT][WIDTH];
         for (int i = 0; i < HEIGHT; i++)
             for (int j = 0; j < WIDTH; j++)
                 if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
                     map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
-                } else {
-                    map[i][j] = new Grass(j*CELLS_SIZE, i*CELLS_SIZE);
                 }
-        
+
         enemys = new ArrayList<>();
-        boms = new LinkedList<>();
     }
 
     /** khởi tạo đối tượng game */
@@ -289,8 +297,9 @@ public class Game {
                         player.moveDown(map);
                         break;
                     case SPACE:
-                        boms.add(new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
-                                ((player.getY()+CELLS_SIZE/2)/CELLS_SIZE) * CELLS_SIZE));
+                        map[(player.getY()+CELLS_SIZE/2)/CELLS_SIZE][(player.getX()+CELLS_SIZE/2)/CELLS_SIZE]
+                            = new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
+                                ((player.getY()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE);
                         break;
                     default:
                         break;
@@ -301,6 +310,36 @@ public class Game {
 
     public Scene getScene() {
         return scene;
+    }
+
+    private void killWith(Fire fire) {
+        fire.burn(player);
+        enemys.forEach(i -> fire.burn(i));
+    }
+
+    private void ignite(int i, int j) {
+        map[i][j] = new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
+        killWith((Fire) map[i][j]);
+        for (int x = 1; x <= igniteRange; x++)
+            if (map[i][j-x] == null) {
+                map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
+                killWith((Fire) map[i][j-x]);
+            } else break;
+        for (int x = 1; x <= igniteRange; x++)
+            if (map[i][j+x] == null) {
+                map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
+                killWith((Fire) map[i][j+x]);
+            } else break;
+        for (int x = 1; x <= igniteRange; x++)
+            if (map[i-x][j] == null) {
+                map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
+                killWith((Fire) map[i-x][j]);
+            } else break;
+        for (int x = 1; x <= igniteRange; x++)
+            if (map[i+x][j] == null) {
+                map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
+                killWith((Fire) map[i+x][j]);
+            } else break;
     }
 
     private void start() {
@@ -314,5 +353,11 @@ public class Game {
 
     private void run() {
         loop.start();
+    }
+
+    private void end() {
+        loop.stop();
+        playPausePane.setVisible(true);
+        resumeBtn.setDisable(true);
     }
 }
