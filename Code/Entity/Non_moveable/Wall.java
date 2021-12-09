@@ -8,4 +8,9 @@ public class Wall extends Non_moveable {
         prevent = true;
         image = new Image("./Resources/icons/wall.png");
     }
+
+    @Override
+    public String toString() {
+        return null;
+    }
 }

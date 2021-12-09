@@ -9,4 +9,9 @@ public class Bom extends ShortLife {
         prevent = false;
         image = new Image("./Resources/icons/bomb.png");
     }
+
+    @Override
+    public String toString() {
+        return null;
+    }
 }

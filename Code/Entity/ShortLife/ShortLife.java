@@ -2,7 +2,7 @@ package Code.Entity.ShortLife;
 
 import Code.Entity.Entity;
 
-public class ShortLife extends Entity {
+public abstract class ShortLife extends Entity {
     protected long timeToDie;
 
     public ShortLife(int x, int y) {

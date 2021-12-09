@@ -17,4 +17,9 @@ public class Player extends Moveable {
     public int getHealth() {
         return health;
     }
+
+    @Override
+    public String toString() {
+        return null;
+    }
 }

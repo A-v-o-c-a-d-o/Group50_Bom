@@ -18,4 +18,9 @@ public class Fire extends ShortLife {
                 a.die();
         }
     }
+
+    @Override
+    public String toString() {
+        return null;
+    }
 }

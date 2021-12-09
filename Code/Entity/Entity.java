@@ -39,5 +39,7 @@ public abstract class Entity {
         return alive;
     }
 
+    public abstract String toString();
+
     public void update() {}
 }
