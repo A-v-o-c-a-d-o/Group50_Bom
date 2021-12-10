@@ -12,7 +12,6 @@ public abstract class Enemy extends Moveable {
 
     public Enemy(int x, int y) {
         super(x, y);
-        health = 3;
     }
 
     public void move(Entity[][] map) {
