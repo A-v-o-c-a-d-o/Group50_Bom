@@ -26,27 +26,27 @@ public abstract class Moveable extends Entity {
         this.step = step;
     }
 
-    private boolean checkPoint(Entity[][] map, int x, int y) {
+    protected boolean checkPoint(Entity[][] map, int x, int y) {
         return map[y / Game.CELLS_SIZE][x / Game.CELLS_SIZE] == null
             || !map[y / Game.CELLS_SIZE][x / Game.CELLS_SIZE].prevent;
     }
     
-    private boolean canMoveLeft(Entity[][] map) {
+    protected boolean canMoveLeft(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5) - step, y + Game.CELLS_SIZE/5)
             && checkPoint(map, x + (Game.CELLS_SIZE/5) - step, y + 4*Game.CELLS_SIZE/5);
     }
 
-    private boolean canMoveRight(Entity[][] map) {
+    protected boolean canMoveRight(Entity[][] map) {
         return checkPoint(map, x + (4*Game.CELLS_SIZE/5) + step, y + Game.CELLS_SIZE/5)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5) + step, y + 4*Game.CELLS_SIZE/5);
     }
 
-    private boolean canMoveUp(Entity[][] map) {
+    protected boolean canMoveUp(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5), y + (Game.CELLS_SIZE/5) - step)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5), y + (Game.CELLS_SIZE/5) - step);
     }
 
-    private boolean canMoveDown(Entity[][] map) {
+    protected boolean canMoveDown(Entity[][] map) {
         return checkPoint(map, x + (Game.CELLS_SIZE/5), y + (4*Game.CELLS_SIZE/5) + step)
             && checkPoint(map, x + (4*Game.CELLS_SIZE/5), y + (4*Game.CELLS_SIZE/5) + step);
     }

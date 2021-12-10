@@ -3,8 +3,9 @@ package Code.App;
 import java.util.ArrayList;
 import java.util.List;
 import Code.Entity.Entity;
-import Code.Entity.Moveable.Moveable;
 import Code.Entity.Moveable.Player;
+import Code.Entity.Moveable.Enemys.Enemy;
+import Code.Entity.Moveable.Enemys.Doll;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
@@ -32,7 +33,7 @@ public class Game {
     private Scene scene;
     Entity[][] map;
     Player player;
-    List<Moveable> enemys;
+    List<Enemy> enemys;
 
     /** main loop */
     AnimationTimer loop;
@@ -222,12 +223,18 @@ public class Game {
                 try {
                     if (!player.isAlive())
                         end();
+                    
+                    // back grass
                     for (int i = 0; i < HEIGHT; i++)
                         for (int j = 0; j < WIDTH; j++)
                             gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
-                    for (Moveable i: enemys)
+                    
+                    // enemys
+                    for (Enemy i: enemys) {
+                        i.move(map);
                         if (!i.isAlive())
                             enemys.remove(i);
+                    }
 
                     // map
                     for (int i = 0; i < HEIGHT; i++)
@@ -260,6 +267,10 @@ public class Game {
         player = new Player(CELLS_SIZE, CELLS_SIZE);
         player.setStep(speed);
 
+        // khởi tạo enemys
+        enemys = new ArrayList<>();
+        enemys.add(new Doll(90, 90));
+
         // khởi tạo map trống
         map = new Entity[HEIGHT][WIDTH];
         map[2][2] = new Brick(60, 60);
@@ -268,8 +279,6 @@ public class Game {
                 if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
                     map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
                 }
-
-        enemys = new ArrayList<>();
     }
 
     /** khởi tạo đối tượng game */
