@@ -210,8 +210,8 @@ public class Game {
     }
 
     private void setupGame() {
-        speed = 2;
-        igniteRange = 1;
+        speed = 5;
+        igniteRange = 2;
 
         // khởi tạo main loop
         loop = new AnimationTimer() {
@@ -220,7 +220,9 @@ public class Game {
                 try {
                     if (!player.isAlive())
                         end();
-                    gc.clearRect(0, 0, canvas.getWidth(), canvas.getHeight());
+                        for (int i = 0; i < HEIGHT; i++)
+                            for (int j = 0; j < WIDTH; j++)
+                                gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
                     for (Moveable i: enemys)
                         if (!i.isAlive())
                             enemys.remove(i);

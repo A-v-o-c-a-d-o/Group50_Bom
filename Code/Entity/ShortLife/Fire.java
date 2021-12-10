@@ -9,7 +9,7 @@ public class Fire extends ShortLife {
         super(x, y);
         this.timeToDie = System.currentTimeMillis() + 300;
         prevent = false;
-        image = new Image("./Resources/icons/explosion_horizontal2.png");
+        image = new Image("./Resources/icons/fire.png");
     }
 
     public void burn(Moveable a) {
