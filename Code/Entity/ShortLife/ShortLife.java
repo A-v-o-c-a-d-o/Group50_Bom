@@ -14,4 +14,9 @@ public abstract class ShortLife extends Entity {
         if (System.currentTimeMillis() - timeToDie > 0)
             alive = false;
     }
+
+    
+    public boolean canBeBurn() {
+        return false;
+    }
 }

@@ -42,4 +42,6 @@ public abstract class Entity {
     public abstract String toString();
 
     public void update() {}
+    
+    public abstract boolean canBeBurn();
 }

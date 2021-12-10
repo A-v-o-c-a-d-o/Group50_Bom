@@ -5,6 +5,8 @@ import java.util.List;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Moveable;
 import Code.Entity.Moveable.Player;
+import Code.Entity.Non_moveable.Brick;
+import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
 import Code.Entity.ShortLife.Bom;
 import Code.Entity.ShortLife.Fire;
@@ -220,9 +222,9 @@ public class Game {
                 try {
                     if (!player.isAlive())
                         end();
-                        for (int i = 0; i < HEIGHT; i++)
-                            for (int j = 0; j < WIDTH; j++)
-                                gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
+                    for (int i = 0; i < HEIGHT; i++)
+                        for (int j = 0; j < WIDTH; j++)
+                            gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
                     for (Moveable i: enemys)
                         if (!i.isAlive())
                             enemys.remove(i);
@@ -260,6 +262,7 @@ public class Game {
 
         // khởi tạo map trống
         map = new Entity[HEIGHT][WIDTH];
+        map[2][2] = new Brick(60, 60);
         for (int i = 0; i < HEIGHT; i++)
             for (int j = 0; j < WIDTH; j++)
                 if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
@@ -322,25 +325,45 @@ public class Game {
     private void ignite(int i, int j) {
         map[i][j] = new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
         killWith((Fire) map[i][j]);
+
+        // left
         for (int x = 1; x <= igniteRange; x++)
             if (map[i][j-x] == null) {
                 map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
                 killWith((Fire) map[i][j-x]);
+            } else if ((map[i][j-x] instanceof Non_moveable) && map[i][j-x].canBeBurn()) {
+                map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
+                break;
             } else break;
+
+        // right
         for (int x = 1; x <= igniteRange; x++)
             if (map[i][j+x] == null) {
                 map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
                 killWith((Fire) map[i][j+x]);
+            } else if ((map[i][j+x] instanceof Non_moveable) && map[i][j+x].canBeBurn()) {
+                map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
+                break;
             } else break;
+        
+        // up
         for (int x = 1; x <= igniteRange; x++)
             if (map[i-x][j] == null) {
                 map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
                 killWith((Fire) map[i-x][j]);
+            } else if ((map[i-x][j] instanceof Non_moveable) && map[i-x][j].canBeBurn()) {
+                map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
+                break;
             } else break;
+        
+        // down
         for (int x = 1; x <= igniteRange; x++)
             if (map[i+x][j] == null) {
                 map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
                 killWith((Fire) map[i+x][j]);
+            } else if ((map[i+x][j] instanceof Non_moveable) && map[i+x][j].canBeBurn()) {
+                map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
+                break;
             } else break;
     }
 

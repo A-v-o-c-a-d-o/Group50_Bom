@@ -82,4 +82,8 @@ public abstract class Moveable extends Entity {
             alive = false;
         }
     }
+
+    public boolean canBeBurn() {
+        return true;
+    }
 }
