@@ -9,7 +9,7 @@ public abstract class Entity {
     protected Image image;
     protected int x, y;
     public boolean prevent;
-    public boolean destroy;
+
 
     public void render(GraphicsContext gc) {
         gc.drawImage(image, x, y);
@@ -46,10 +46,4 @@ public abstract class Entity {
     public void update() {}
     
     public abstract boolean canBeBurn();
-
-    public boolean isCollidedWith(Entity other) {
-        double x = Math.abs(this.getX() - other.getX());
-        double y = Math.abs(this.getY() - other.getY());
-        return x < (3* Game.CELLS_SIZE)/5 && y < (3*Game.CELLS_SIZE)/5;
-    }
 }
