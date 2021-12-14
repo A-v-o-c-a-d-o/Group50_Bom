@@ -19,6 +19,6 @@ public class bonusHealth extends Item {
 
     @Override
     public void doWhenCollided(Player player) {
-
+        player.setHealth(player.getHealth() + 1);
     }
 }

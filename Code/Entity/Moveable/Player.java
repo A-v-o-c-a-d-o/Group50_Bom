@@ -23,4 +23,8 @@ public class Player extends Moveable {
     public String toString() {
         return null;
     }
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
 }
