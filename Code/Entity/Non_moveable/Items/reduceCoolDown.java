@@ -6,6 +6,7 @@ import javafx.scene.image.Image;
 public class reduceCoolDown extends Item {
     public reduceCoolDown(int x, int y) {
         super(x, y);
+        image = new Image("./Resources/icons/powerup_bombs.png");
     }
 
     @Override
