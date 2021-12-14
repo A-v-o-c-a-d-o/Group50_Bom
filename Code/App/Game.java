@@ -213,7 +213,7 @@ public class Game {
     }
 
     private void setupGame() {
-        speed = 5;
+        speed = 3;
         igniteRange = 2;
 
         // khởi tạo main loop
@@ -221,7 +221,7 @@ public class Game {
             @Override
             public void handle(long arg0) {
                 try {
-                    if (!player.isAlive())
+                    if (!player.isAlive() || enemys.isEmpty())
                         end();
                     
                     // back grass
@@ -229,6 +229,8 @@ public class Game {
                         for (int j = 0; j < WIDTH; j++)
                             gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
                     
+                    checkTouchEnemy();
+
                     // enemys
                     enemys.forEach(i -> {
                         i.move(map);
@@ -269,16 +271,18 @@ public class Game {
 
         // khởi tạo enemys
         enemys = new ArrayList<>();
-        enemys.add(new Doll(90, 90));
+        enemys.add(new Doll(90, 90, 3));
+        enemys.add(new Doll(4*CELLS_SIZE, 6*CELLS_SIZE, 2));
+        enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
+        enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
 
         // khởi tạo map trống
         map = new Entity[HEIGHT][WIDTH];
         map[2][2] = new Brick(60, 60);
         for (int i = 0; i < HEIGHT; i++)
             for (int j = 0; j < WIDTH; j++)
-                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1) {
+                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
                     map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
-                }
     }
 
     /** khởi tạo đối tượng game */
@@ -393,5 +397,16 @@ public class Game {
         loop.stop();
         playPausePane.setVisible(true);
         resumeBtn.setDisable(true);
+    }
+
+    private void checkTouchEnemy() {
+        for (Enemy i: enemys) {
+            double x = Math.abs(player.getX() - i.getX());
+            double y = Math.abs(player.getY() - i.getY());
+            if (x < (3*CELLS_SIZE)/5 && y < (3*CELLS_SIZE)/5) {
+                player.die();
+                i.die();
+            }
+        }
     }
 }

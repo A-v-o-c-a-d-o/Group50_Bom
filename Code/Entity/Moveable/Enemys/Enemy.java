@@ -14,6 +14,11 @@ public abstract class Enemy extends Moveable {
         super(x, y);
     }
 
+    public Enemy(int x, int y, int step) {
+        super(x, y);
+        this.step = step;
+    }
+
     public void move(Entity[][] map) {
         boolean change = false;
 
