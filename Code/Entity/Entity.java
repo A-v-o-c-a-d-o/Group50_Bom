@@ -1,5 +1,6 @@
 package Code.Entity;
 
+import Code.App.Game;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -47,11 +48,8 @@ public abstract class Entity {
     public abstract boolean canBeBurn();
 
     public boolean isCollidedWith(Entity other) {
-        return distanceTo(other) < 0.5;
-    }
-
-    public double distanceTo(Entity other) {
-        return Math.sqrt(Math.pow(x - other.getX(), 2) +
-                Math.pow(y - other.getY(), 2));
+        double x = Math.abs(this.getX() - other.getX());
+        double y = Math.abs(this.getY() - other.getY());
+        return x < (3* Game.CELLS_SIZE)/5 && y < (3*Game.CELLS_SIZE)/5;
     }
 }
