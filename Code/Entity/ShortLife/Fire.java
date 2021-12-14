@@ -12,7 +12,7 @@ public class Fire extends ShortLife {
         image = new Image("./Resources/icons/fire.png");
     }
 
-    public void burn(Moveable a) {
+    public void burn(Moveable a) throws Exception {
         if (x < a.getX() + Game.CELLS_SIZE/2 && a.getX() + Game.CELLS_SIZE/2 < x + Game.CELLS_SIZE
             && y < a.getY() + Game.CELLS_SIZE/2 && a.getY() + Game.CELLS_SIZE/2 < y + Game.CELLS_SIZE) {
                 a.die();

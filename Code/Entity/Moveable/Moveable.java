@@ -1,10 +1,15 @@
 package Code.Entity.Moveable;
 
+import java.io.File;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import Code.App.Game;
 import Code.Entity.Entity;
 import javafx.scene.image.Image;
 
 public abstract class Moveable extends Entity {
+    protected String dieSound;
     protected int health;
     protected int step;
     protected Image imgLeft;
@@ -75,7 +80,16 @@ public abstract class Moveable extends Entity {
             y += step;
     }
 
-    public void die() {
+    public void die() throws Exception {
+        if (dieSound != null) {
+            String path = (System.getProperty("user.dir") + "/src/Resources/sound/" + dieSound);
+            File file = new File(path);
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(file);
+            clip.open(inputStream);
+            clip.start();
+        }
+        
         health--;
         if (health < 1) {
             image = imgDead;

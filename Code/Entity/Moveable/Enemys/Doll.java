@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class Doll extends Enemy {
     public Doll(int x, int y) {
         super(x, y);
+        dieSound = "needleIdle.wav";
         imgLeft = new Image("./Resources/icons/doll_left1.png");
         imgRight = new Image("./Resources/icons/doll_right1.png");
         imgUp = new Image("./Resources/icons/doll_left2.png");
@@ -15,6 +16,7 @@ public class Doll extends Enemy {
 
     public Doll(int x, int y, int step) {
         super(x, y, step);
+        dieSound = "needleIdle.wav";
         imgLeft = new Image("./Resources/icons/doll_left1.png");
         imgRight = new Image("./Resources/icons/doll_right1.png");
         imgUp = new Image("./Resources/icons/doll_left2.png");

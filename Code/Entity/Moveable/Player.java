@@ -5,6 +5,7 @@ import javafx.scene.image.Image;
 public class Player extends Moveable {
     public Player(int x, int y) {
         super(x, y);
+        dieSound = "die.wav";
         health = 3;
         imgLeft = new Image("./Resources/icons/player_left.png");
         imgRight = new Image("./Resources/icons/player_right.png");

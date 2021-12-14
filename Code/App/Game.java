@@ -2,6 +2,7 @@ package Code.App;
 
 import java.util.ArrayList;
 import java.util.List;
+//import javax.sound.sampled.Clip;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Player;
 import Code.Entity.Moveable.Enemys.Enemy;
@@ -24,10 +25,13 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+//import javafx.scene.media.AudioClip;
 import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    //private AudioClip explosionSound;
+    //private Clip clip;
     private int igniteRange;
     private int speed;
     private Scene scene;
@@ -213,76 +217,81 @@ public class Game {
     }
 
     private void setupGame() {
-        speed = 3;
-        igniteRange = 2;
+        try {
+            //explosionSound = new AudioClip(getClass().getResource("./Resources/sound/explosionBomb.wav").toExternalForm());
+            speed = 4;
+            igniteRange = 1;
 
-        // khởi tạo main loop
-        loop = new AnimationTimer() {
-            @Override
-            public void handle(long arg0) {
-                try {
-                    if (!player.isAlive() || enemys.isEmpty())
-                        end();
-                    
-                    // back grass
-                    for (int i = 0; i < HEIGHT; i++)
-                        for (int j = 0; j < WIDTH; j++)
-                            gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
-                    
-                    checkTouchEnemy();
+            // khởi tạo main loop
+            loop = new AnimationTimer() {
+                @Override
+                public void handle(long arg0) {
+                    try {
+                        if (!player.isAlive() || enemys.isEmpty())
+                            end();
 
-                    // enemys
-                    enemys.forEach(i -> {
-                        i.move(map);
-                        if (!i.isAlive())
-                            enemys.remove(i);
-                    });
+                        // back grass
+                        for (int i = 0; i < HEIGHT; i++)
+                            for (int j = 0; j < WIDTH; j++)
+                                gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
 
-                    // map
-                    for (int i = 0; i < HEIGHT; i++)
-                        for (int j = 0; j < WIDTH; j++)
-                            if (map[i][j] != null)
-                                if (map[i][j].isAlive()) {
-                                    map[i][j].update();
-                                    map[i][j].render(gc);
-                                } else {
-                                    if (map[i][j] instanceof Bom) {
-                                        ignite(i, j);
-                                    } else map[i][j] = null;
-                                }
-                    
-                    // health symbol
-                    health1.setVisible(player.getHealth() >= 1);
-                    health2.setVisible(player.getHealth() >= 2);
-                    health3.setVisible(player.getHealth() >= 3);
-                    
-                    // moveable
-                    player.render(gc);
-                    enemys.forEach(i -> i.render(gc));
-                } catch (Exception e) {
-                    System.out.print(e.getMessage());
+                        checkTouchEnemy();
+
+                        // enemys
+                        enemys.forEach(i -> {
+                            i.move(map);
+                            if (!i.isAlive())
+                                enemys.remove(i);
+                        });
+
+                        // map
+                        for (int i = 0; i < HEIGHT; i++)
+                            for (int j = 0; j < WIDTH; j++)
+                                if (map[i][j] != null)
+                                    if (map[i][j].isAlive()) {
+                                        map[i][j].update();
+                                        map[i][j].render(gc);
+                                    } else {
+                                        if (map[i][j] instanceof Bom) {
+                                            ignite(i, j);
+                                        } else map[i][j] = null;
+                                    }
+
+                        // health symbol
+                        health1.setVisible(player.getHealth() >= 1);
+                        health2.setVisible(player.getHealth() >= 2);
+                        health3.setVisible(player.getHealth() >= 3);
+
+                        // moveable
+                        player.render(gc);
+                        enemys.forEach(i -> i.render(gc));
+                    } catch (Exception e) {
+                        System.out.print(e.getMessage());
+                    }
                 }
-            }
-        };
+            };
 
-        // khởi tạo player
-        player = new Player(CELLS_SIZE, CELLS_SIZE);
-        player.setStep(speed);
+            // khởi tạo player
+            player = new Player(CELLS_SIZE, CELLS_SIZE);
+            player.setStep(speed);
 
-        // khởi tạo enemys
-        enemys = new ArrayList<>();
-        enemys.add(new Doll(90, 90, 3));
-        enemys.add(new Doll(4*CELLS_SIZE, 6*CELLS_SIZE, 2));
-        enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
-        enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
+            // khởi tạo enemys
+            enemys = new ArrayList<>();
+            enemys.add(new Doll(90, 90, 3));
+            enemys.add(new Doll(4*CELLS_SIZE, 6*CELLS_SIZE, 2));
+            enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
+            enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
 
-        // khởi tạo map trống
-        map = new Entity[HEIGHT][WIDTH];
-        map[2][2] = new Brick(60, 60);
-        for (int i = 0; i < HEIGHT; i++)
-            for (int j = 0; j < WIDTH; j++)
-                if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
-                    map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
+            // khởi tạo map trống
+            map = new Entity[HEIGHT][WIDTH];
+            map[2][2] = new Brick(60, 60);
+            for (int i = 0; i < HEIGHT; i++)
+                for (int j = 0; j < WIDTH; j++)
+                    if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
+                        map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     /** khởi tạo đối tượng game */
@@ -330,12 +339,19 @@ public class Game {
         return scene;
     }
 
-    private void kill(Fire fire) {
+    private void kill(Fire fire) throws Exception {
         fire.burn(player);
-        enemys.forEach(i -> fire.burn(i));
+        enemys.forEach(i -> {
+            try {
+                fire.burn(i);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
-    private void ignite(int i, int j) {
+    private void ignite(int i, int j) throws Exception {
+        //explosionSound.play();
         map[i][j] = new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
         kill((Fire) map[i][j]);
 
@@ -404,8 +420,12 @@ public class Game {
             double x = Math.abs(player.getX() - i.getX());
             double y = Math.abs(player.getY() - i.getY());
             if (x < (3*CELLS_SIZE)/5 && y < (3*CELLS_SIZE)/5) {
-                player.die();
-                i.die();
+                try {
+                    player.die();
+                    i.die();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         }
     }
