@@ -8,6 +8,7 @@ public abstract class Entity {
     protected Image image;
     protected int x, y;
     public boolean prevent;
+    public boolean destroy;
 
     public void render(GraphicsContext gc) {
         gc.drawImage(image, x, y);
@@ -44,4 +45,13 @@ public abstract class Entity {
     public void update() {}
     
     public abstract boolean canBeBurn();
+
+    public boolean isCollidedWith(Entity other) {
+        return distanceTo(other) < 0.5;
+    }
+
+    public double distanceTo(Entity other) {
+        return Math.sqrt(Math.pow(x - other.getX(), 2) +
+                Math.pow(y - other.getY(), 2));
+    }
 }
