@@ -36,6 +36,6 @@ public class Player extends Moveable {
     }
 
     public void setHealth(int health) {
-        this.health = health;
+        this.health = health <= 3 ? health : 3;
     }
 }

@@ -16,6 +16,6 @@ public class speedUp extends Item{
 
     @Override
     public void doWhenCollided(Player player) {
-        player.setStep(7);
+        player.setStep(player.getStep() + 3);
     }
 }

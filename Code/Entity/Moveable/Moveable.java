@@ -27,8 +27,12 @@ public abstract class Moveable extends Entity {
         this.y = y;
     }
 
+    public int getStep() {
+        return this.step;
+    }
+
     public void setStep(int step) {
-        this.step = step;
+        this.step = step <= 9 ? step : 9;
     }
 
     protected boolean checkPoint(Entity[][] map, int x, int y) {

@@ -295,14 +295,9 @@ public class Game {
             enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
             enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
 
-            // khởi tạo map trống
+            // khởi tạo map
             map = new Entity[HEIGHT][WIDTH];
             mapInfo = new char[HEIGHT][WIDTH];
-            //map[2][2] = new Brick(60, 60);
-            /**for (int i = 0; i < HEIGHT; i++)
-                for (int j = 0; j < WIDTH; j++)
-                    if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
-                        map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);*/
             loadMap(System.getProperty("user.dir") + "/src/Resources/data/map1.txt");
             
         } catch (Exception e) {
@@ -422,7 +417,7 @@ public class Game {
     }
 
     private Entity brickDestroyed(int i, int j) {
-        if (StdRandom.uniform(100) > 100) {
+        if (StdRandom.uniform(250) > 24) {
             return new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
         } else {
             int rand = StdRandom.uniform(3);
