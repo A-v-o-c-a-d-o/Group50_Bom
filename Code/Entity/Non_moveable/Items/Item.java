@@ -12,11 +12,11 @@ public abstract class Item extends Non_moveable {
 
     public abstract void doWhenCollided(Player player);
 
-    public boolean update(Player other) {
+    public void update(Player other) {
         if (this.isCollidedWith(other)) {
             doWhenCollided(other);
+            alive = false;
         }
-        return false;
     }
 
     public boolean isCollidedWith(Player other) {

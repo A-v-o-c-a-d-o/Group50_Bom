@@ -10,6 +10,7 @@ import Code.Entity.Moveable.Enemys.Doll;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
+import Code.Entity.Non_moveable.Items.speedUp;
 import Code.Entity.ShortLife.Bom;
 import Code.Entity.ShortLife.Fire;
 import javafx.animation.AnimationTimer;
@@ -240,7 +241,7 @@ public class Game {
                             for (int j = 0; j < WIDTH; j++)
                                 if (map[i][j] != null)
                                     if (map[i][j].isAlive()) {
-                                        map[i][j].update();
+                                        map[i][j].update(player);
                                         map[i][j].render(gc);
                                     } else {
                                         if (map[i][j] instanceof Bom) {
@@ -380,7 +381,8 @@ public class Game {
                 map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
                 kill((Fire) map[i+x][j]);
             } else if ((map[i+x][j] instanceof Non_moveable) && map[i+x][j].canBeBurn()) {
-                map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
+                //map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
+                map[i+x][j] = new speedUp(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
                 break;
             } else break;
     }

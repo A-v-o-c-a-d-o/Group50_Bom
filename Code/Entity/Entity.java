@@ -1,5 +1,6 @@
 package Code.Entity;
 
+import Code.Entity.Moveable.Player;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 
@@ -42,7 +43,7 @@ public abstract class Entity {
 
     public abstract String toString();
 
-    public void update() {}
+    public void update(Player player) {}
     
     public abstract boolean canBeBurn();
 }
