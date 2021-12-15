@@ -15,11 +15,6 @@ public class increaseRange extends Item {
     }
 
     @Override
-    public boolean canBeBurn() {
-        return false;
-    }
-
-    @Override
     public void doWhenCollided(Player player) {
         player.setIgniteRange(player.getIgniteRange() + 1);
     }

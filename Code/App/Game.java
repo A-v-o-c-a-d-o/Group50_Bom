@@ -30,6 +30,7 @@ import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    private int score;
     private Scene scene;
     Entity[][] map;
     Player player;
@@ -214,6 +215,8 @@ public class Game {
 
     private void setupGame() {
         try {
+            score = 0;
+
             // khởi tạo main loop
             loop = new AnimationTimer() {
                 @Override

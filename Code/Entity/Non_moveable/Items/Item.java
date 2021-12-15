@@ -24,4 +24,9 @@ public abstract class Item extends Non_moveable {
         double y = Math.abs(this.getY() - other.getY());
         return x < (3* Game.CELLS_SIZE)/5 && y < (3*Game.CELLS_SIZE)/5;
     }
+
+    @Override
+    public boolean canBeBurn() {
+        return true;
+    }
 }

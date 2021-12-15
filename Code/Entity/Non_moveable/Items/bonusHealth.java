@@ -15,11 +15,6 @@ public class bonusHealth extends Item {
     }
 
     @Override
-    public boolean canBeBurn() {
-        return false;
-    }
-
-    @Override
     public void doWhenCollided(Player player) {
         player.setHealth(player.getHealth() + 1);
     }

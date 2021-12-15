@@ -11,7 +11,7 @@ public class Brick extends Non_moveable {
 
     @Override
     public String toString() {
-        return null;
+        return "B";
     }
 
     @Override

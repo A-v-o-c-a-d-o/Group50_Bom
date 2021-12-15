@@ -11,7 +11,7 @@ public class Wall extends Non_moveable {
 
     @Override
     public String toString() {
-        return null;
+        return "W";
     }
 
     @Override

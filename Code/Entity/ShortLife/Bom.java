@@ -10,6 +10,10 @@ public class Bom extends ShortLife {
         image = new Image("./Resources/icons/bomb.png");
     }
 
+    public void increaseTimeToDie() {
+        timeToDie -= 1000;
+    }
+
     @Override
     public String toString() {
         return null;
