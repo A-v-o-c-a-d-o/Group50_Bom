@@ -1,5 +1,8 @@
 package Code.App;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import Code.Entity.Entity;
@@ -38,6 +41,7 @@ public class Game {
     Entity[][] map;
     Player player;
     List<Enemy> enemys;
+    char[][] mapInfo;
 
     /** main loop */
     AnimationTimer loop;
@@ -438,6 +442,32 @@ public class Game {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    public void loadMap(String path) {
+        BufferedReader br = null;
+
+        try {
+            br = new BufferedReader(new FileReader(path));
+            String bufferString;
+            for (int i = 0; i < HEIGHT; i++) {
+                bufferString = br.readLine();
+                for (int j = 0; j < WIDTH; j++) {
+                    mapInfo[i][j] = bufferString.charAt(j);
+                }
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (br != null) {
+                    br.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
