@@ -10,9 +10,12 @@ import Code.Entity.Moveable.Enemys.Doll;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
+import Code.Entity.Non_moveable.Items.bonusHealth;
+import Code.Entity.Non_moveable.Items.increaseRange;
 import Code.Entity.Non_moveable.Items.speedUp;
 import Code.Entity.ShortLife.Bom;
 import Code.Entity.ShortLife.Fire;
+import edu.princeton.cs.algs4.StdRandom;
 import javafx.animation.AnimationTimer;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -354,7 +357,7 @@ public class Game {
                 map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
                 kill((Fire) map[i][j-x]);
             } else if ((map[i][j-x] instanceof Non_moveable) && map[i][j-x].canBeBurn()) {
-                map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
+                map[i][j-x] = brickDestroyed(i, j-x);
                 break;
             } else break;
 
@@ -364,7 +367,7 @@ public class Game {
                 map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
                 kill((Fire) map[i][j+x]);
             } else if ((map[i][j+x] instanceof Non_moveable) && map[i][j+x].canBeBurn()) {
-                map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
+                map[i][j+x] = brickDestroyed(i, j+x);
                 break;
             } else break;
         
@@ -374,7 +377,7 @@ public class Game {
                 map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
                 kill((Fire) map[i-x][j]);
             } else if ((map[i-x][j] instanceof Non_moveable) && map[i-x][j].canBeBurn()) {
-                map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
+                map[i-x][j] = brickDestroyed(i-x, j);
                 break;
             } else break;
         
@@ -384,10 +387,25 @@ public class Game {
                 map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
                 kill((Fire) map[i+x][j]);
             } else if ((map[i+x][j] instanceof Non_moveable) && map[i+x][j].canBeBurn()) {
-                //map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
-                map[i+x][j] = new speedUp(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
+                map[i+x][j] = brickDestroyed(i+x, j);
                 break;
             } else break;
+    }
+
+    private Entity brickDestroyed(int i, int j) {
+        if (StdRandom.uniform(100) > 100) {
+            return new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
+        } else {
+            int rand = StdRandom.uniform(3);
+            switch (rand) {
+                case 1:
+                    return new bonusHealth(j*CELLS_SIZE, i*CELLS_SIZE);
+                case 2:
+                    return new increaseRange(j*CELLS_SIZE, i*CELLS_SIZE);
+                default:
+                    return new speedUp(j*CELLS_SIZE, i*CELLS_SIZE);
+            }
+        }
     }
 
     private void start() {
