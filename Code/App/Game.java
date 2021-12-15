@@ -2,10 +2,10 @@ package Code.App;
 
 import java.util.ArrayList;
 import java.util.List;
-//import javax.sound.sampled.Clip;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Player;
 import Code.Entity.Moveable.Enemys.Enemy;
+import Code.Entity.Moveable.Enemys.Balloom;
 import Code.Entity.Moveable.Enemys.Doll;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
@@ -25,13 +25,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
-//import javafx.scene.media.AudioClip;
 import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
-    //private AudioClip explosionSound;
-    //private Clip clip;
     private int igniteRange;
     private int speed;
     private Scene scene;
@@ -218,7 +215,6 @@ public class Game {
 
     private void setupGame() {
         try {
-            //explosionSound = new AudioClip(getClass().getResource("./Resources/sound/explosionBomb.wav").toExternalForm());
             speed = 4;
             igniteRange = 1;
 
@@ -277,7 +273,7 @@ public class Game {
 
             // khởi tạo enemys
             enemys = new ArrayList<>();
-            enemys.add(new Doll(90, 90, 3));
+            enemys.add(new Balloom(90, 90));
             enemys.add(new Doll(4*CELLS_SIZE, 6*CELLS_SIZE, 2));
             enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
             enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
@@ -351,7 +347,6 @@ public class Game {
     }
 
     private void ignite(int i, int j) throws Exception {
-        //explosionSound.play();
         map[i][j] = new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
         kill((Fire) map[i][j]);
 
