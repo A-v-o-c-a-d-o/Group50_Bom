@@ -1,3 +1,10 @@
 .button {
-    -fx-background-color: #9a6fdf;
+    -fx-background-color: #58e332;
+    -fx-border-style:  solid;
 }
+
+.label {
+    -fx-font-size: 25;
+    -fx-font-style: italic;
+}
+

@@ -32,9 +32,15 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundImage;
+import javafx.scene.layout.BackgroundPosition;
+import javafx.scene.layout.BackgroundRepeat;
+import javafx.scene.layout.BackgroundSize;
 import javafx.scene.text.Font;
 
 public class Game {
+    private BackgroundImage background = new BackgroundImage(new Image("./Resources/icons/background.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
     private int score;
     private Scene scene;
@@ -118,7 +124,6 @@ public class Game {
             public void handle(MouseEvent event) {
                 try {
                     scene.setRoot(playPane);
-                    loop.start();
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
                 }
@@ -127,6 +132,7 @@ public class Game {
         
         menuPane = new AnchorPane();
         menuPane.setPrefSize(640, 400);
+        menuPane.setBackground(new Background(background));
         menuPane.getChildren().addAll(menuHelpBtn, menuScoreBtn, menuSettingBtn, menuPlayBtn, menuNameGameLabel);
     }
 
@@ -184,6 +190,7 @@ public class Game {
         playPausePane.getChildren().addAll(resumeBtn, fromPlayToMenuBtn, restartBtn);
 
         playPane = new AnchorPane();
+        playPane.setBackground(new Background(background));
         playPane.setPrefSize(640, 400);
         playPane.getChildren().addAll(canvas, playPausePane, pauseBtn, health1, health2, health3);
     }
@@ -216,6 +223,7 @@ public class Game {
         });
 
         helpPane = new AnchorPane();
+        helpPane.setBackground(new Background(background));
         helpPane.setPrefSize(640, 400);
         helpPane.getChildren().addAll(tutorial, helpUpBtn, helpDownBtn, helpLeftBtn, helpRightBtn, helpSpaceBtn, helpUp, helpDown, helpLeft, helpRight, helpSpace, helpBottomTitle, BTMenu);
     }
