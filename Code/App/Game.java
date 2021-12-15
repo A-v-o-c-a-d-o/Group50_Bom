@@ -107,7 +107,6 @@ public class Game {
             public void handle(MouseEvent event) {
                 try {
                     scene.setRoot(helpPane);
-                    loop.start();
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
                 }
@@ -124,6 +123,7 @@ public class Game {
             public void handle(MouseEvent event) {
                 try {
                     scene.setRoot(playPane);
+                    start();
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
                 }
@@ -293,11 +293,15 @@ public class Game {
 
             // khởi tạo map trống
             map = new Entity[HEIGHT][WIDTH];
+            mapInfo = new char[HEIGHT][WIDTH];
             map[2][2] = new Brick(60, 60);
             for (int i = 0; i < HEIGHT; i++)
                 for (int j = 0; j < WIDTH; j++)
                     if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
                         map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
+            
+            //loadMap(System.getProperty("user.dir") + "/src/Resources/data/map1.txt");
+            
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
@@ -421,6 +425,7 @@ public class Game {
     }
 
     private void start() {
+        playPausePane.setVisible(false);
         setupGame();
         loop.start();
     }
@@ -465,7 +470,6 @@ public class Game {
                 for (int j = 0; j < WIDTH; j++) {
                     mapInfo[i][j] = bufferString.charAt(j);
                 }
-                System.out.println();
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -480,11 +484,12 @@ public class Game {
         }
     }
 
-    public void loadMap() {
+    public void loadMap(String path) {
+        loadMapInfo(path);
         for (int i = 0; i < HEIGHT; i++) {
             for (int j = 0; j < WIDTH; j++) {
-                if (mapInfo[i][j] == 'W') map[i][j] = new Wall(j * CELLS_SIZE, i * CELLS_SIZE);
-                else if (mapInfo[i][j] == 'B') map[i][j] = new Brick(j * CELLS_SIZE, i * CELLS_SIZE);
+                if (mapInfo[i][j] == 'w') map[i][j] = new Wall(j * CELLS_SIZE, i * CELLS_SIZE);
+                else if (mapInfo[i][j] == 'b') map[i][j] = new Brick(j * CELLS_SIZE, i * CELLS_SIZE);
             }
         }
     }
