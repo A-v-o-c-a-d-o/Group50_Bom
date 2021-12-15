@@ -1,10 +1,14 @@
 package Code.App;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Player;
 import Code.Entity.Moveable.Enemys.Enemy;
@@ -364,6 +368,16 @@ public class Game {
     }
 
     private void ignite(int i, int j) throws Exception {
+        // play sound
+        try {
+            Clip clip = AudioSystem.getClip();
+            AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(System.getProperty("user.dir") + "/src/Resources/sound/explosion.wav"));
+            clip.open(inputStream);
+            clip.start();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+
         map[i][j] = new Fire(j*CELLS_SIZE, i*CELLS_SIZE);
         kill((Fire) map[i][j]);
 
