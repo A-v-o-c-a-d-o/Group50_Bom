@@ -298,13 +298,12 @@ public class Game {
             // khởi tạo map trống
             map = new Entity[HEIGHT][WIDTH];
             mapInfo = new char[HEIGHT][WIDTH];
-            map[2][2] = new Brick(60, 60);
-            for (int i = 0; i < HEIGHT; i++)
+            //map[2][2] = new Brick(60, 60);
+            /**for (int i = 0; i < HEIGHT; i++)
                 for (int j = 0; j < WIDTH; j++)
                     if (i == 0 || i == HEIGHT-1 || j == 0 || j == WIDTH-1)
-                        map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);
-            
-            //loadMap(System.getProperty("user.dir") + "/src/Resources/data/map1.txt");
+                        map[i][j] = new Wall(j*CELLS_SIZE, i*CELLS_SIZE);*/
+            loadMap(System.getProperty("user.dir") + "/src/Resources/data/map1.txt");
             
         } catch (Exception e) {
             System.out.print(e.getMessage());
