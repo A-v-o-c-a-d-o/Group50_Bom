@@ -454,7 +454,7 @@ public class Game {
         }
     }
 
-    public void loadMap(String path) {
+    public void loadMapInfo(String path) {
         BufferedReader br = null;
 
         try {
@@ -476,6 +476,15 @@ public class Game {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    public void loadMap() {
+        for (int i = 0; i < HEIGHT; i++) {
+            for (int j = 0; j < WIDTH; j++) {
+                if (mapInfo[i][j] == 'W') map[i][j] = new Wall(j * CELLS_SIZE, i * CELLS_SIZE);
+                else if (mapInfo[i][j] == 'B') map[i][j] = new Brick(j * CELLS_SIZE, i * CELLS_SIZE);
             }
         }
     }
