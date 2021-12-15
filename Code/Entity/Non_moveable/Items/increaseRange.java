@@ -21,6 +21,6 @@ public class increaseRange extends Item {
 
     @Override
     public void doWhenCollided(Player player) {
-
+        player.setIgniteRange(player.getIgniteRange() + 1);
     }
 }

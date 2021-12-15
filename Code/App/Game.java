@@ -29,8 +29,6 @@ import javafx.scene.text.Font;
 
 public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
-    private int igniteRange;
-    private int speed;
     private Scene scene;
     Entity[][] map;
     Player player;
@@ -215,9 +213,6 @@ public class Game {
 
     private void setupGame() {
         try {
-            speed = 4;
-            igniteRange = 1;
-
             // khởi tạo main loop
             loop = new AnimationTimer() {
                 @Override
@@ -269,7 +264,6 @@ public class Game {
 
             // khởi tạo player
             player = new Player(CELLS_SIZE, CELLS_SIZE);
-            player.setStep(speed);
 
             // khởi tạo enemys
             enemys = new ArrayList<>();
@@ -351,7 +345,7 @@ public class Game {
         kill((Fire) map[i][j]);
 
         // left
-        for (int x = 1; x <= igniteRange; x++)
+        for (int x = 1; x <= player.getIgniteRange(); x++)
             if (map[i][j-x] == null) {
                 map[i][j-x] = new Fire((j-x)*CELLS_SIZE, i*CELLS_SIZE);
                 kill((Fire) map[i][j-x]);
@@ -361,7 +355,7 @@ public class Game {
             } else break;
 
         // right
-        for (int x = 1; x <= igniteRange; x++)
+        for (int x = 1; x <= player.getIgniteRange(); x++)
             if (map[i][j+x] == null) {
                 map[i][j+x] = new Fire((j+x)*CELLS_SIZE, i*CELLS_SIZE);
                 kill((Fire) map[i][j+x]);
@@ -371,7 +365,7 @@ public class Game {
             } else break;
         
         // up
-        for (int x = 1; x <= igniteRange; x++)
+        for (int x = 1; x <= player.getIgniteRange(); x++)
             if (map[i-x][j] == null) {
                 map[i-x][j] = new Fire(j*CELLS_SIZE, (i-x)*CELLS_SIZE);
                 kill((Fire) map[i-x][j]);
@@ -381,7 +375,7 @@ public class Game {
             } else break;
         
         // down
-        for (int x = 1; x <= igniteRange; x++)
+        for (int x = 1; x <= player.getIgniteRange(); x++)
             if (map[i+x][j] == null) {
                 map[i+x][j] = new Fire(j*CELLS_SIZE, (i+x)*CELLS_SIZE);
                 kill((Fire) map[i+x][j]);
