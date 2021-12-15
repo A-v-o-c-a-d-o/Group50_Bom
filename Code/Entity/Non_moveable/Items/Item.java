@@ -1,8 +1,12 @@
 package Code.Entity.Non_moveable.Items;
 
+import java.io.File;
 import Code.App.Game;
 import Code.Entity.Moveable.Player;
 import Code.Entity.Non_moveable.Non_moveable;
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 
 public abstract class Item extends Non_moveable {
     public Item(int x, int y) {
@@ -14,6 +18,14 @@ public abstract class Item extends Non_moveable {
 
     public void update(Player other) {
         if (this.isCollidedWith(other)) {
+            try {
+                Clip clip = AudioSystem.getClip();
+                AudioInputStream inputStream = AudioSystem.getAudioInputStream(new File(System.getProperty("user.dir") + "/src/Resources/sound/beep.wav"));
+                clip.open(inputStream);
+                clip.start();
+            } catch (Exception e) {
+                System.out.print(e.getMessage());
+            }
             doWhenCollided(other);
             alive = false;
         }
