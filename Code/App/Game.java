@@ -311,9 +311,6 @@ public class Game {
         setupMenuPane();
         setupPlayPane();
         setupHelpPane();
-
-        // khởi tạo game
-        setupGame();
         
         // setup main scene
         scene = new Scene(menuPane);
