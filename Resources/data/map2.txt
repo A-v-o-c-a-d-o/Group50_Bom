@@ -2,10 +2,10 @@ wwwwwwwwwwwwwwwwwwww
 w----b--b--b--b----w
 w---wwwbw--wbwww---w
 w---w---b---b--w---w
-w-www-b--bb--b-www-w
+w-www-b--bb--b--ww-w
 w-b-b--w-ww-w--b-b-w
-w-b-b--w-ww-w--b-b-w
-w-www-b--bb--b-www-w
+w-b----w-ww-w--b-b-w
+w-www-b--b---b-www-w
 w---w--b----b--w---w
 w---wwwbw--wbwww---w
 w-b--b--b--b--b--b-w

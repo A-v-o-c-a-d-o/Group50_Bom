@@ -298,7 +298,7 @@ public class Game {
             // khởi tạo map
             map = new Entity[HEIGHT][WIDTH];
             mapInfo = new char[HEIGHT][WIDTH];
-            loadMap(System.getProperty("user.dir") + "/src/Resources/data/map1.txt");
+            loadMap(System.getProperty("user.dir") + "/src/Resources/data/map2.txt");
             
         } catch (Exception e) {
             System.out.print(e.getMessage());
