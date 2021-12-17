@@ -476,16 +476,9 @@ public class Game {
                     mapInfo[i][j] = bufferString.charAt(j);
                 }
             }
+            br.close();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
-            try {
-                if (br != null) {
-                    br.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
