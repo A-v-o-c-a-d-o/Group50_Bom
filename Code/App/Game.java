@@ -44,6 +44,7 @@ import javafx.scene.text.Font;
 public class Game {
     private BackgroundImage background = new BackgroundImage(new Image("./Resources/icons/background.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    private String mapPath = System.getProperty("user.dir") +  "/src/Resources/data/map1.txt";
     private int score;
     private Scene scene;
     Entity[][] map;
@@ -59,6 +60,11 @@ public class Game {
     private GraphicsContext gc;
     private Button pauseBtn, resumeBtn, fromPlayToMenuBtn, restartBtn;
     private ImageView health1, health2, health3;
+
+    /** setting */
+    private AnchorPane settingPane;
+    private Label settingTitle;
+    private Button level1, level2;
 
     /** help */
     AnchorPane helpPane;
@@ -118,12 +124,24 @@ public class Game {
         menuScoreBtn = newButton("Score", 120, 30, 260, 280);
 
         menuSettingBtn = newButton("Setting", 120, 30, 260, 240);
+        menuSettingBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    setupSettingPane();
+                    scene.setRoot(settingPane);
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        });
 
         menuPlayBtn = newButton("Play", 120, 30, 260, 200);
         menuPlayBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
                 try {
+                    mapPath = System.getProperty("user.dir") +  "/src/Resources/data/map1.txt";
                     setupPlayPane();
                     scene.setRoot(playPane);
                     start();
@@ -196,6 +214,53 @@ public class Game {
         playPane.setBackground(new Background(background));
         playPane.setPrefSize(640, 400);
         playPane.getChildren().addAll(canvas, playPausePane, pauseBtn, health1, health2, health3);
+    }
+
+    private void setupSettingPane() {
+        settingTitle = newLabel("MAP", 264, 43, 148, 28);
+        settingTitle.setFont(new Font("Franklin Gothic Heavy", 28));
+
+        level1 = newButton("", 73, 31, 115, 251);
+        level1.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    mapPath = System.getProperty("user.dir") +  "/src/Resources/data/map1.txt";
+                    setupPlayPane();
+                    scene.setRoot(playPane);
+                    start();
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        });
+
+        level2 = newButton("", 73, 31, 412, 251);
+        level2.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    mapPath = System.getProperty("user.dir") +  "/src/Resources/data/map2.txt";
+                    setupPlayPane();
+                    scene.setRoot(playPane);
+                    start();
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        });
+
+        BTMenu = newButton("Back to menu", 120, 31, 476, 361);
+        BTMenu.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                scene.setRoot(menuPane);
+            }
+        });
+
+        settingPane = new AnchorPane();
+        settingPane.setPrefSize(640, 400);
+        settingPane.getChildren().addAll(settingTitle, level1, level2, BTMenu);
     }
 
     private void setupHelpPane() {
@@ -288,7 +353,7 @@ public class Game {
             player = new Player(CELLS_SIZE, CELLS_SIZE);
 
             // khởi tạo map
-            loadMap(System.getProperty("user.dir") +  "/src/Resources/data/map1.txt");
+            loadMap(mapPath);
             
         } catch (Exception e) {
             System.out.print(e.getMessage());
