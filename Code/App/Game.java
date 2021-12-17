@@ -44,7 +44,7 @@ import javafx.scene.text.Font;
 public class Game {
     private BackgroundImage background = new BackgroundImage(new Image("./Resources/icons/background.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
-    private String mapPath = System.getProperty("user.dir") +  "/src/Resources/data/map1.txt";
+    private String mapPath;
     private int score;
     private Scene scene;
     Entity[][] map;
@@ -58,13 +58,13 @@ public class Game {
     private AnchorPane playPane, playPausePane;
     private Canvas canvas;
     private GraphicsContext gc;
-    private Button pauseBtn, resumeBtn, fromPlayToMenuBtn, restartBtn;
-    private ImageView health1, health2, health3;
+    private Button resumeBtn, fromPlayToMenuBtn, restartBtn;
+    private ImageView health1, health2, health3, pauseBtn;
 
     /** setting */
     private AnchorPane settingPane;
     private Label settingTitle;
-    private Button level1, level2;
+    private ImageView level1, level2;
 
     /** help */
     AnchorPane helpPane;
@@ -106,9 +106,9 @@ public class Game {
     }
 
     private void setupMenuPane() {
-        menuNameGameLabel = newLabel("Bomberman", 640, 100, 0, 100);
+        menuNameGameLabel = newLabel("Bomberman", 200, 100, 40, 24);
 
-        menuHelpBtn = newButton("Help", 120, 30, 260, 320);
+        menuHelpBtn = newButton("Help", 120, 30, 70, 320 - 70);
         menuHelpBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -121,9 +121,9 @@ public class Game {
             }
         });
 
-        menuScoreBtn = newButton("Score", 120, 30, 260, 280);
+        menuScoreBtn = newButton("Score", 120, 30, 70, 280 - 70);
 
-        menuSettingBtn = newButton("Setting", 120, 30, 260, 240);
+        menuSettingBtn = newButton("Setting", 120, 30, 70, 240 - 70);
         menuSettingBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -136,7 +136,7 @@ public class Game {
             }
         });
 
-        menuPlayBtn = newButton("Play", 120, 30, 260, 200);
+        menuPlayBtn = newButton("Play", 120, 30, 70, 200 - 70);
         menuPlayBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -159,16 +159,16 @@ public class Game {
 
     private void setupPlayPane() {
         Image hearthIcon = new Image("./Resources/icons/heart.png");
-        health1 = newImageView(hearthIcon, 20, 20, 600, 380);
-        health2 = newImageView(hearthIcon, 20, 20, 580, 380);
-        health3 = newImageView(hearthIcon, 20, 20, 560, 380);
+        health1 = newImageView(hearthIcon, 20, 20, 20, 0);
+        health2 = newImageView(hearthIcon, 20, 20, 40, 0);
+        health3 = newImageView(hearthIcon, 20, 20, 60, 0);
 
         canvas = new Canvas(CELLS_SIZE*WIDTH, CELLS_SIZE*HEIGHT);
         canvas.setLayoutX(20);
         canvas.setLayoutY(20);
         gc = canvas.getGraphicsContext2D();
 
-        pauseBtn = newButton("", 20, 20, 620, 0);
+        pauseBtn = newImageView(new Image("./Resources/icons/setting-icon.png"), 20, 20, 620, 0);
         pauseBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -217,10 +217,10 @@ public class Game {
     }
 
     private void setupSettingPane() {
-        settingTitle = newLabel("MAP", 264, 100, 148, 100);
+        settingTitle = newLabel("CHOOSE MAP", 240, 100, 200, 0);
         settingTitle.setFont(new Font("Franklin Gothic Heavy", 100));
 
-        level1 = newButton("", 73, 31, 115, 251);
+        level1 = newImageView(new Image("./Resources/icons/Map1.png") ,200, 147, 62, 127);
         level1.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -235,7 +235,7 @@ public class Game {
             }
         });
 
-        level2 = newButton("", 73, 31, 412, 251);
+        level2 = newImageView(new Image("./Resources/icons/Map2.png") ,200, 147, 371, 127);
         level2.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -287,7 +287,6 @@ public class Game {
             @Override
             public void handle(MouseEvent event) {
                 scene.setRoot(menuPane);
-                pause();
             }
         });
 
@@ -542,7 +541,7 @@ public class Game {
 
             br.close();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.print(e.getMessage());
         }
     }
 
