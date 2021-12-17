@@ -217,8 +217,8 @@ public class Game {
     }
 
     private void setupSettingPane() {
-        settingTitle = newLabel("MAP", 264, 43, 148, 28);
-        settingTitle.setFont(new Font("Franklin Gothic Heavy", 28));
+        settingTitle = newLabel("MAP", 264, 100, 148, 100);
+        settingTitle.setFont(new Font("Franklin Gothic Heavy", 100));
 
         level1 = newButton("", 73, 31, 115, 251);
         level1.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -259,6 +259,7 @@ public class Game {
         });
 
         settingPane = new AnchorPane();
+        settingPane.setBackground(new Background(background));
         settingPane.setPrefSize(640, 400);
         settingPane.getChildren().addAll(settingTitle, level1, level2, BTMenu);
     }
