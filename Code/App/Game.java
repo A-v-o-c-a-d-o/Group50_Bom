@@ -11,9 +11,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Player;
-import Code.Entity.Moveable.Enemys.Enemy;
-import Code.Entity.Moveable.Enemys.Balloom;
-import Code.Entity.Moveable.Enemys.Doll;
+import Code.Entity.Moveable.Enemys.*;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
@@ -51,7 +49,6 @@ public class Game {
     Entity[][] map;
     Player player;
     List<Enemy> enemys;
-    char[][] mapInfo;
 
     /** main loop */
     AnimationTimer loop;
@@ -288,17 +285,8 @@ public class Game {
             // khởi tạo player
             player = new Player(CELLS_SIZE, CELLS_SIZE);
 
-            // khởi tạo enemys
-            enemys = new ArrayList<>();
-            enemys.add(new Balloom(90, 90));
-            enemys.add(new Doll(4*CELLS_SIZE, 6*CELLS_SIZE, 2));
-            enemys.add(new Doll(10*CELLS_SIZE, 7*CELLS_SIZE, 2));
-            enemys.add(new Doll(15*CELLS_SIZE, 4*CELLS_SIZE, 2));
-
             // khởi tạo map
-            map = new Entity[HEIGHT][WIDTH];
-            mapInfo = new char[HEIGHT][WIDTH];
-            loadMap(System.getProperty("user.dir") + "/src/Resources/data/map2.txt");
+            loadMap(System.getProperty("user.dir") +  "/src/Resources/data/map2.txt");
             
         } catch (Exception e) {
             System.out.print(e.getMessage());
@@ -464,31 +452,51 @@ public class Game {
         }
     }
 
-    public void loadMapInfo(String path) {
-        BufferedReader br = null;
-
+    public void loadMap(String path) {
         try {
-            br = new BufferedReader(new FileReader(path));
+            map = new Entity[HEIGHT][WIDTH];
+            enemys = new ArrayList<>();
+
+            BufferedReader br = new BufferedReader(new FileReader(path));
             String bufferString;
             for (int i = 0; i < HEIGHT; i++) {
                 bufferString = br.readLine();
                 for (int j = 0; j < WIDTH; j++) {
-                    mapInfo[i][j] = bufferString.charAt(j);
+                    if (bufferString.charAt(j) == 'w') map[i][j] = new Wall(j * CELLS_SIZE, i * CELLS_SIZE);
+                    else if (bufferString.charAt(j) == 'b') map[i][j] = new Brick(j * CELLS_SIZE, i * CELLS_SIZE);
                 }
             }
+
+            while (br.ready()) {
+                String[] a = br.readLine().split(" ");
+                int x = Integer.parseInt(a[0]) * CELLS_SIZE;
+                int y = Integer.parseInt(a[1]) * CELLS_SIZE;
+                createEnemy(x, y);
+            }
+
             br.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void loadMap(String path) {
-        loadMapInfo(path);
-        for (int i = 0; i < HEIGHT; i++) {
-            for (int j = 0; j < WIDTH; j++) {
-                if (mapInfo[i][j] == 'w') map[i][j] = new Wall(j * CELLS_SIZE, i * CELLS_SIZE);
-                else if (mapInfo[i][j] == 'b') map[i][j] = new Brick(j * CELLS_SIZE, i * CELLS_SIZE);
-            }
+    private void createEnemy(int x, int y) {
+        switch (StdRandom.uniform(5)) {
+            case 1:
+                enemys.add(new Balloom(x, y, StdRandom.uniform(3) + 1));
+                break;
+            case 2:
+                enemys.add(new Doll(x, y, StdRandom.uniform(3) + 1));
+                break;
+            case 3:
+                enemys.add(new Kondoria(x, y, StdRandom.uniform(3) + 1));
+                break;
+            case 4:
+                enemys.add(new Minvo(x, y, StdRandom.uniform(3) + 1));
+                break;
+            default:
+                enemys.add(new Oneal(x, y, StdRandom.uniform(3) + 1));
+                break;
         }
     }
 }

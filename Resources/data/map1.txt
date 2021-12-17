@@ -1,12 +1,21 @@
 wwwwwwwwwwwwwwwwwwww
-w-----b-b-b-b-b-b-bw
-w-w-w-w-w-w-w-w-w-bw
-w-b-b-b-b-b-b-b-b-bw
-wb---b-------b--w-bw
-w-b-------------b-bw
-wb----b-----b---w-bw
-w-b-------------b-bw
-wbw--b-------b--w-bw
-w-wbw-b-bwb-b-wbw-bw
-wb-b-b-b-b-b-b-b-bbw
+w-----b-b-b-b-b-b--w
+w-w-w-w-w-w-w-w-wbww
+w-b-b-b-b-b-b-b-b--w
+wb---b-------b--wbww
+w-b-------------b--w
+wb----b-----b---w-ww
+w-b-------------b--w
+wbw--b-------b--w-ww
+w-wbw-b-bwb-b-wbw--w
+wb-b-b-b-b-b-b-b-b-w
 wwwwwwwwwwwwwwwwwwww
+18 1
+15 1
+15 8
+9 6
+1 9
+5 5
+7 1
+17 7
+13 3

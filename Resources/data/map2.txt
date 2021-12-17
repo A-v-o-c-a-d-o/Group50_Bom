@@ -10,3 +10,13 @@ w---w--b----b--w---w
 w---wwwbw--wbwww---w
 w-b--b--b--b--b--b-w
 wwwwwwwwwwwwwwwwwwww
+18 1
+15 1
+15 4
+8 5
+1 9
+5 5
+7 1
+17 9
+9 10
+10 3

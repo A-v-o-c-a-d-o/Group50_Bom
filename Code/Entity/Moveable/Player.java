@@ -14,7 +14,7 @@ public class Player extends Moveable {
         imgRight = new Image("./Resources/icons/player_right.png");
         imgUp = new Image("./Resources/icons/player_up.png");
         imgDown = new Image("./Resources/icons/player_down.png");
-        imgDead = new Image("./Resources/icons/player_dead1.png");
+        imgDead = new Image("./Resources/icons/player_dead.png");
         image = imgDown;
     }
 
