@@ -2,8 +2,12 @@ package Code.App;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import javax.sound.sampled.AudioInputStream;
@@ -22,6 +26,8 @@ import Code.Entity.ShortLife.Bom;
 import Code.Entity.ShortLife.Fire;
 import edu.princeton.cs.algs4.StdRandom;
 import javafx.animation.AnimationTimer;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,6 +35,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
@@ -45,8 +52,8 @@ public class Game {
     private BackgroundImage background = new BackgroundImage(new Image("./Resources/icons/background.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
     private String mapPath;
-    private int score;
     private Scene scene;
+    private List<Integer> listScore = new ArrayList<>();
     Entity[][] map;
     Player player;
     List<Enemy> enemys;
@@ -65,6 +72,10 @@ public class Game {
     private AnchorPane settingPane;
     private Label settingTitle;
     private ImageView level1, level2;
+
+    /** score */
+    private AnchorPane scorePane;
+    private Label scoreTitle;
 
     /** help */
     AnchorPane helpPane;
@@ -122,6 +133,17 @@ public class Game {
         });
 
         menuScoreBtn = newButton("Score", 120, 30, 70, 280 - 70);
+        menuScoreBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                try {
+                    setupScorePane();
+                    scene.setRoot(scorePane);
+                } catch (Exception e) {
+                    System.out.print(e.getMessage());
+                }
+            }
+        });
 
         menuSettingBtn = newButton("Setting", 120, 30, 70, 240 - 70);
         menuSettingBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -264,6 +286,43 @@ public class Game {
         settingPane.getChildren().addAll(settingTitle, level1, level2, BTMenu);
     }
 
+    private int getScore() {
+        int ans = 100 + player.getHealth()*20 - enemys.size()*10;
+        return ans;
+    }
+
+    private void setupScorePane() {
+        loadListScore();
+
+        scoreTitle = newLabel("Score",166, 50, 213, 29);
+        scoreTitle.setFont(new Font("Franklin Gothic Heavy", 42));
+
+        ListView<Object> lsScore = new ListView<>();
+        lsScore.setPrefSize(200, 281);
+        lsScore.setLayoutX(69);
+        lsScore.setLayoutY(100);
+        lsScore.getSelectionModel().selectIndices(0, 9);
+
+        ObservableList<Object> b = FXCollections.observableArrayList();
+        for (int i: listScore)
+            b.add(i);
+
+        lsScore.setItems(b);
+
+        BTMenu = newButton("Back to menu", 120, 31, 476, 361);
+        BTMenu.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                scene.setRoot(menuPane);
+            }
+        });
+
+        scorePane = new AnchorPane();
+        scorePane.setBackground(new Background(background));
+        scorePane.setPrefSize(640, 400);
+        scorePane.getChildren().addAll(scoreTitle, lsScore, BTMenu);
+    }
+
     private void setupHelpPane() {
         tutorial = newLabel("Tutorial",166, 50, 213, 29);
         tutorial.setFont(new Font("Franklin Gothic Heavy", 42));
@@ -298,8 +357,6 @@ public class Game {
 
     private void setupGame() {
         try {
-            score = 100;
-
             // khởi tạo main loop
             loop = new AnimationTimer() {
                 @Override
@@ -360,10 +417,13 @@ public class Game {
         }
     }
 
-    /** khởi tạo đối tượng game */
+    /** khởi tạo game */
     public Game() {
         // khởi tạo menu
         setupMenuPane();
+
+        // load score
+        loadListScore();
         
         // setup main scene
         scene = new Scene(menuPane);
@@ -394,6 +454,16 @@ public class Game {
                 }
             }
         });
+    }
+
+    private void loadListScore() {
+        try {
+            ObjectInputStream in = new ObjectInputStream(new FileInputStream(new File(System.getProperty("user.dir") +  "/src/Resources/data/Score.txt")));
+            listScore = (List<Integer>) in.readObject();
+            in.close();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     public Scene getScene() {
@@ -497,9 +567,17 @@ public class Game {
     }
 
     private void end() {
-        loop.stop();
-        playPausePane.setVisible(true);
-        resumeBtn.setDisable(true);
+        try {
+            loop.stop();
+            listScore.add(getScore());
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(System.getProperty("user.dir") +  "/src/Resources/data/Score.txt")));
+            out.writeObject(listScore);
+            out.close();
+            playPausePane.setVisible(true);
+            resumeBtn.setDisable(true);
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     private void checkTouchEnemy() {
