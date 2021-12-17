@@ -231,7 +231,7 @@ public class Game {
 
     private void setupGame() {
         try {
-            score = 0;
+            score = 100;
 
             // khởi tạo main loop
             loop = new AnimationTimer() {
@@ -286,7 +286,7 @@ public class Game {
             player = new Player(CELLS_SIZE, CELLS_SIZE);
 
             // khởi tạo map
-            loadMap(System.getProperty("user.dir") +  "/src/Resources/data/map2.txt");
+            loadMap(System.getProperty("user.dir") +  "/src/Resources/data/map1.txt");
             
         } catch (Exception e) {
             System.out.print(e.getMessage());
