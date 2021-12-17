@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -299,15 +300,27 @@ public class Game {
 
         ListView<Object> lsScore = new ListView<>();
         lsScore.setPrefSize(200, 281);
-        lsScore.setLayoutX(69);
+        lsScore.setLayoutX(70);
         lsScore.setLayoutY(100);
         lsScore.getSelectionModel().selectIndices(0, 9);
-
         ObservableList<Object> b = FXCollections.observableArrayList();
         for (int i: listScore)
             b.add(i);
-
         lsScore.setItems(b);
+
+        ListView<Object> highestScore = new ListView<>();
+        highestScore.setPrefSize(200, 100);
+        highestScore.setLayoutX(280);
+        highestScore.setLayoutY(100);
+        highestScore.getSelectionModel().selectIndices(0, 9);
+        ObservableList<Object> c = FXCollections.observableArrayList();
+        List<Integer> copy = new ArrayList<>();
+        for (int i: listScore)
+            copy.add(i);
+        copy.sort(Collections.reverseOrder());
+        for (int i = 0; i < 3 && i < copy.size(); i++)
+            c.add(copy.get(i));
+        highestScore.setItems(c);
 
         BTMenu = newButton("Back to menu", 120, 31, 476, 361);
         BTMenu.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -320,7 +333,7 @@ public class Game {
         scorePane = new AnchorPane();
         scorePane.setBackground(new Background(background));
         scorePane.setPrefSize(640, 400);
-        scorePane.getChildren().addAll(scoreTitle, lsScore, BTMenu);
+        scorePane.getChildren().addAll(scoreTitle, lsScore, highestScore, BTMenu);
     }
 
     private void setupHelpPane() {
