@@ -107,6 +107,7 @@ public class Game {
             @Override
             public void handle(MouseEvent event) {
                 try {
+                    setupHelpPane();
                     scene.setRoot(helpPane);
                 } catch (Exception e) {
                     System.out.print(e.getMessage());
@@ -123,6 +124,7 @@ public class Game {
             @Override
             public void handle(MouseEvent event) {
                 try {
+                    setupPlayPane();
                     scene.setRoot(playPane);
                     start();
                 } catch (Exception e) {
@@ -295,10 +297,8 @@ public class Game {
 
     /** khởi tạo đối tượng game */
     public Game() {
-        // khởi tạo các màn hình hiển thị
+        // khởi tạo menu
         setupMenuPane();
-        setupPlayPane();
-        setupHelpPane();
         
         // setup main scene
         scene = new Scene(menuPane);
