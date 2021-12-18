@@ -54,10 +54,12 @@ public class Game {
     public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
     private String mapPath;
     private Scene scene;
+    private Clip clip;
+    private AudioInputStream music;
     private List<Integer> listScore = new ArrayList<>();
-    Entity[][] map;
-    Player player;
-    List<Enemy> enemys;
+    private Entity[][] map;
+    private Player player;
+    private List<Enemy> enemys;
 
     /** main loop */
     AnimationTimer loop;
@@ -80,9 +82,9 @@ public class Game {
     private Label scoreTitle;
 
     /** help */
-    AnchorPane helpPane;
-    Button helpUpBtn, helpDownBtn, helpLeftBtn, helpRightBtn, helpSpaceBtn, BTMenu;
-    Label helpUp, helpDown, helpLeft, helpRight, helpSpace, helpBottomTitle, tutorial;
+    private AnchorPane helpPane;
+    private Button helpUpBtn, helpDownBtn, helpLeftBtn, helpRightBtn, helpSpaceBtn, BTMenu;
+    private Label helpUp, helpDown, helpLeft, helpRight, helpSpace, helpBottomTitle, tutorial;
 
     /** menu */
     private AnchorPane menuPane;
@@ -346,30 +348,24 @@ public class Game {
         helpLeftBtn = newButton("v", 44, 31, 106, 149);
         helpRightBtn = newButton("v", 44, 31, 194, 149);
         helpSpaceBtn = newButton("", 187, 31, 74, 215);
-// chú ý
+
         helpUp = newLabel("Press button '^' to go up ", 174, 21, 351, 95);
         helpUp.getStyleClass().add("text-fill1");
-        System.out.println(helpUp.getStyleClass());
 
         helpDown = newLabel("Press button 'v' to go up ", 194, 21, 351, 123);
         helpDown.getStyleClass().add("text-fill2");
-        System.out.println(helpUp.getStyleClass());
 
         helpLeft = newLabel("Press button '<' to go up ", 180, 21, 351, 180);
         helpLeft.getStyleClass().add("text-fill3");
-        System.out.println(helpUp.getStyleClass());
 
         helpRight = newLabel("Press button '>' to go up ", 187, 21, 351, 154);
         helpRight.getStyleClass().add("text-fill4");
-        System.out.println(helpUp.getStyleClass());
 
         helpSpace = newLabel("Press button SPACE to drop your bomb", 278, 21, 300, 220);
         helpSpace.getStyleClass().add("text-fill5");
-        System.out.println(helpUp.getStyleClass());
 
         helpBottomTitle = newLabel("You must kill all the enemies to win this game!", 426, 27, 107, 308);
         helpBottomTitle.getStyleClass().add("text-fill6");
-        System.out.println(helpUp.getStyleClass());
         helpBottomTitle.setFont(new Font("Book Antiqua", 20));
 
         BTMenu = newButton("Back to menu", 120, 31, 476, 361);
@@ -446,41 +442,62 @@ public class Game {
 
     /** khởi tạo game */
     public Game() {
-        // khởi tạo menu
-        setupMenuPane();
+        try {
+            // khởi tạo menu
+            setupMenuPane();
 
-        // load score
-        loadListScore();
-        
-        // setup main scene
-        scene = new Scene(menuPane);
-        scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
-        scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                switch (event.getCode()) {
-                    case LEFT:
-                        player.moveLeft(map);
-                        break;
-                    case RIGHT:
-                        player.moveRight(map);
-                        break;
-                    case UP:
-                        player.moveUp(map);
-                        break;
-                    case DOWN:
-                        player.moveDown(map);
-                        break;
-                    case SPACE:
-                        map[(player.getY()+CELLS_SIZE/2)/CELLS_SIZE][(player.getX()+CELLS_SIZE/2)/CELLS_SIZE]
-                            = new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
-                                ((player.getY()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE);
-                        break;
-                    default:
-                        break;
+            // load score
+            loadListScore();
+            
+            // setup main scene
+            scene = new Scene(menuPane);
+            scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
+            scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+                @Override
+                public void handle(KeyEvent event) {
+                    switch (event.getCode()) {
+                        case LEFT:
+                            player.moveLeft(map);
+                            break;
+                        case RIGHT:
+                            player.moveRight(map);
+                            break;
+                        case UP:
+                            player.moveUp(map);
+                            break;
+                        case DOWN:
+                            player.moveDown(map);
+                            break;
+                        case SPACE:
+                            map[(player.getY()+CELLS_SIZE/2)/CELLS_SIZE][(player.getX()+CELLS_SIZE/2)/CELLS_SIZE]
+                                = new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
+                                    ((player.getY()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE);
+                            break;
+                        default:
+                            break;
+                    }
                 }
-            }
-        });
+            });
+        
+            // sound
+            playSound("Jumper");
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
+    }
+
+    private void playSound(String fileName) {
+        try {
+            if (clip != null)
+                clip.stop();
+            clip = AudioSystem.getClip();
+            music = AudioSystem.getAudioInputStream(new File("./src/Resources/sound/" + fileName + ".wav"));
+            clip.open(music);
+            clip.loop(100);
+            clip.start();
+        } catch (Exception e) {
+            System.out.print(e.getMessage());
+        }
     }
 
     private void loadListScore() {
