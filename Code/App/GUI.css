@@ -1,0 +1,49 @@
+.button {
+    -fx-background-color: #58e332;
+    -fx-border-style:  solid;
+}
+
+.button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: #4652e3;
+}
+
+.label {
+    -fx-font-size: 25;
+    -fx-font-style: italic;
+}
+
+.text-fill1 {
+    -fx-text-fill: #fff;
+    -fx-font-size: 16;
+}
+
+.text-fill2 {
+    -fx-text-fill: #fff;
+    -fx-font-size: 16;
+}
+
+.text-fill3 {
+     -fx-text-fill: #fff;
+     -fx-font-size: 16;
+ }
+
+.text-fill4 {
+    -fx-text-fill: #fff;
+    -fx-font-size: 16;
+}
+
+.text-fill5 {
+    -fx-text-fill: #fff;
+    -fx-font-size: 14;
+}
+
+.text-fill6 {
+    -fx-text-fill: #fff;
+    -fx-font-size: 20;
+}
+
+.back-to-menu-button:hover {
+    -fx-cursor: hand;
+    -fx-background-color: #4652e3;
+}
