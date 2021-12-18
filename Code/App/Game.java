@@ -62,6 +62,7 @@ public class Game {
     /** main loop */
     AnimationTimer loop;
     final String TEXT_FILL = "-fx-text-fill: #fff;";
+    
     /** play */
     private AnchorPane playPane, playPausePane;
     private Canvas canvas;
@@ -87,10 +88,7 @@ public class Game {
     private AnchorPane menuPane;
     private Label menuNameGameLabel;
     private Button menuHelpBtn, menuScoreBtn, menuSettingBtn, menuPlayBtn;
-    // đổi màu chữ đi th gay nhìn mù mẹ mắt
-    // tưởng màu chữ ko đổi được?
-    // countryside
-    // cái phần hướng dẫn đâu
+    
     /** tạo Button dễ hơn */
     private Button newButton(String text, double preX, double preY, double layoutX, double layoutY) {
         Button ans = new Button(text);
@@ -312,7 +310,7 @@ public class Game {
         lsScore.setItems(b);
 
         ListView<Object> highestScore = new ListView<>();
-        highestScore.setPrefSize(200, 100);
+        highestScore.setPrefSize(200, 74);
         highestScore.setLayoutX(280);
         highestScore.setLayoutY(100);
         highestScore.getSelectionModel().selectIndices(0, 9);
@@ -671,3 +669,4 @@ public class Game {
                 break;
         }
     }
+}
