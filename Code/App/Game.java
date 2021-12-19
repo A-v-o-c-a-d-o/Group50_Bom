@@ -312,10 +312,13 @@ public class Game {
         lsScore.setItems(b);
 
         ListView<Object> highestScore = new ListView<>();
-        highestScore.setPrefSize(200, 74);
+        highestScore.setPrefSize(200, 71);
         highestScore.setLayoutX(280);
         highestScore.setLayoutY(100);
-        highestScore.getSelectionModel().selectIndices(0, 9);
+        ImageView gold = newImageView(new Image("Resources/icons/goldMedal.png"), 35, 25, 455, 100);
+        ImageView silver = newImageView(new Image("Resources/icons/silverMedal.png"), 35, 23, 455, 125);
+        ImageView bronze = newImageView(new Image("Resources/icons/bronzeMedal.png"), 35, 20, 455, 150);
+        //highestScore.getSelectionModel().selectIndices(0, 1);
         ObservableList<Object> c = FXCollections.observableArrayList();
         List<Integer> copy = new ArrayList<>();
         for (int i: listScore)
@@ -336,7 +339,7 @@ public class Game {
         scorePane = new AnchorPane();
         scorePane.setBackground(new Background(background));
         scorePane.setPrefSize(640, 400);
-        scorePane.getChildren().addAll(scoreTitle, lsScore, highestScore, BTMenu);
+        scorePane.getChildren().addAll(scoreTitle, lsScore, highestScore, BTMenu, gold, silver, bronze);
     }
 
     private void setupHelpPane() {
