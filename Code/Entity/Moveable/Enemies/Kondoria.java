@@ -1,4 +1,4 @@
-package Code.Entity.Moveable.Enemys;
+package Code.Entity.Moveable.Enemies;
 
 import javafx.scene.image.Image;
 

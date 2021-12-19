@@ -1,4 +1,4 @@
-package Code.Entity.Moveable.Enemys;
+package Code.Entity.Moveable.Enemies;
 
 import java.util.ArrayList;
 import java.util.List;

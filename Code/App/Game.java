@@ -16,7 +16,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import Code.Entity.Entity;
 import Code.Entity.Moveable.Player;
-import Code.Entity.Moveable.Enemys.*;
+import Code.Entity.Moveable.Enemies.*;
 import Code.Entity.Non_moveable.Brick;
 import Code.Entity.Non_moveable.Non_moveable;
 import Code.Entity.Non_moveable.Wall;
@@ -59,7 +59,7 @@ public class Game {
     private List<Integer> listScore = new ArrayList<>();
     private Entity[][] map;
     private Player player;
-    private List<Enemy> enemys;
+    private List<Enemy> enemies;
 
     /** main loop */
     AnimationTimer loop;
@@ -291,7 +291,7 @@ public class Game {
     }
 
     private int getScore() {
-        int ans = 100 + player.getHealth()*20 - enemys.size()*10;
+        int ans = 100 + player.getHealth()*20 - enemies.size()*10;
         return ans;
     }
 
@@ -388,7 +388,7 @@ public class Game {
                 @Override
                 public void handle(long arg0) {
                     try {
-                        if (!player.isAlive() || enemys.isEmpty())
+                        if (!player.isAlive() || enemies.isEmpty())
                             end();
 
                         // back grass
@@ -398,11 +398,11 @@ public class Game {
 
                         checkTouchEnemy();
 
-                        // enemys
-                        enemys.forEach(i -> {
+                        // enemies
+                        enemies.forEach(i -> {
                             i.move(map);
                             if (!i.isAlive())
-                                enemys.remove(i);
+                                enemies.remove(i);
                         });
 
                         // map
@@ -425,7 +425,7 @@ public class Game {
 
                         // moveable
                         player.render(gc);
-                        enemys.forEach(i -> i.render(gc));
+                        enemies.forEach(i -> i.render(gc));
                     } catch (Exception e) {
                         System.out.print(e.getMessage());
                     }
@@ -519,7 +519,7 @@ public class Game {
 
     private void kill(Fire fire) throws Exception {
         fire.burn(player);
-        enemys.forEach(i -> {
+        enemies.forEach(i -> {
             try {
                 fire.burn(i);
             } catch (Exception e) {
@@ -628,7 +628,7 @@ public class Game {
     }
 
     private void checkTouchEnemy() {
-        for (Enemy i: enemys) {
+        for (Enemy i: enemies) {
             double x = Math.abs(player.getX() - i.getX());
             double y = Math.abs(player.getY() - i.getY());
             if (x < (3*CELLS_SIZE)/5 && y < (3*CELLS_SIZE)/5) {
@@ -645,7 +645,7 @@ public class Game {
     public void loadMap(String path) {
         try {
             map = new Entity[HEIGHT][WIDTH];
-            enemys = new ArrayList<>();
+            enemies = new ArrayList<>();
 
             BufferedReader br = new BufferedReader(new FileReader(path));
             String bufferString;
@@ -673,19 +673,19 @@ public class Game {
     private void createEnemy(int x, int y) {
         switch (StdRandom.uniform(5)) {
             case 1:
-                enemys.add(new Balloom(x, y, StdRandom.uniform(3) + 1));
+                enemies.add(new Balloom(x, y, StdRandom.uniform(3) + 1));
                 break;
             case 2:
-                enemys.add(new Doll(x, y, StdRandom.uniform(3) + 1));
+                enemies.add(new Doll(x, y, StdRandom.uniform(3) + 1));
                 break;
             case 3:
-                enemys.add(new Kondoria(x, y, StdRandom.uniform(3) + 1));
+                enemies.add(new Kondoria(x, y, StdRandom.uniform(3) + 1));
                 break;
             case 4:
-                enemys.add(new Minvo(x, y, StdRandom.uniform(3) + 1));
+                enemies.add(new Minvo(x, y, StdRandom.uniform(3) + 1));
                 break;
             default:
-                enemys.add(new Oneal(x, y, StdRandom.uniform(3) + 1));
+                enemies.add(new Oneal(x, y, StdRandom.uniform(3) + 1));
                 break;
         }
     }
