@@ -312,7 +312,7 @@ public class Game {
         lsScore.setItems(b);
 
         ListView<Object> highestScore = new ListView<>();
-        highestScore.setPrefSize(200, 71);
+        highestScore.setPrefSize(200, 74);
         highestScore.setLayoutX(280);
         highestScore.setLayoutY(100);
         ImageView gold = newImageView(new Image("Resources/icons/goldMedal.png"), 35, 25, 455, 100);
