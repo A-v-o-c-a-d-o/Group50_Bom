@@ -318,11 +318,7 @@ public class Game {
         ImageView gold = newImageView(new Image("Resources/icons/goldMedal.png"), 35, 25, 455, 100);
         ImageView silver = newImageView(new Image("Resources/icons/silverMedal.png"), 35, 23, 455, 125);
         ImageView bronze = newImageView(new Image("Resources/icons/bronzeMedal.png"), 35, 20, 455, 150);
-<<<<<<< HEAD
-
-=======
-        //highestScore.getSelectionModel().selectIndices(0, 1);
->>>>>>> bd76e2de204c1b4b084c247ed42fc39dbafe3048
+        
         ObservableList<Object> c = FXCollections.observableArrayList();
         List<Integer> copy = new ArrayList<>();
         for (int i: listScore)
