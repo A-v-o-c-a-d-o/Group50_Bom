@@ -122,7 +122,7 @@ public class Game {
 
     private void setupMenuPane() {
         menuNameGameLabel = newLabel("Bomberman", 200, 100, 40, 24);
-
+        menuNameGameLabel.getStyleClass().add("name");
         menuHelpBtn = newButton("Help", 120, 30, 70, 320 - 70);
         menuHelpBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
@@ -244,7 +244,8 @@ public class Game {
 
     private void setupSettingPane() {
         settingTitle = newLabel("CHOOSE MAP", 240, 100, 200, 0);
-        settingTitle.setFont(new Font("Franklin Gothic Heavy", 100));
+        settingTitle.getStyleClass().add("map");
+        settingTitle.setFont(new Font("Franklin Gothic Medium", 100));
 
         level1 = newImageView(new Image("./Resources/icons/Map1.png") ,200, 147, 62, 127);
         level1.setOnMouseClicked(new EventHandler<MouseEvent>() {
@@ -299,7 +300,8 @@ public class Game {
         loadListScore();
 
         scoreTitle = newLabel("Score",166, 50, 213, 29);
-        scoreTitle.setFont(new Font("Franklin Gothic Heavy", 42));
+        scoreTitle.getStyleClass().add("point");
+        scoreTitle.setFont(new Font("Franklin Gothic Medium", 42));
 
         ListView<Object> lsScore = new ListView<>();
         lsScore.setPrefSize(200, 281);
@@ -344,7 +346,8 @@ public class Game {
 
     private void setupHelpPane() {
         tutorial = newLabel("Tutorial",166, 50, 213, 29);
-        tutorial.setFont(new Font("Franklin Gothic Heavy", 42));
+        tutorial.getStyleClass().add("help");
+        tutorial.setFont(new Font("Franklin Gothic Medium", 42));
 
         helpUpBtn = newButton("^", 44, 31, 150, 118);
         helpDownBtn = newButton("v", 44, 31, 150, 149);
@@ -355,13 +358,13 @@ public class Game {
         helpUp = newLabel("Press button '^' to go up ", 174, 21, 351, 95);
         helpUp.getStyleClass().add("text-fill1");
 
-        helpDown = newLabel("Press button 'v' to go up ", 194, 21, 351, 123);
+        helpDown = newLabel("Press button 'v' to go down ", 194, 21, 351, 123);
         helpDown.getStyleClass().add("text-fill2");
 
-        helpLeft = newLabel("Press button '<' to go up ", 180, 21, 351, 180);
+        helpLeft = newLabel("Press button '<' to go left ", 180, 21, 351, 180);
         helpLeft.getStyleClass().add("text-fill3");
 
-        helpRight = newLabel("Press button '>' to go up ", 187, 21, 351, 154);
+        helpRight = newLabel("Press button '>' to go right ", 187, 21, 351, 154);
         helpRight.getStyleClass().add("text-fill4");
 
         helpSpace = newLabel("Press button SPACE to drop your bomb", 278, 21, 300, 220);
