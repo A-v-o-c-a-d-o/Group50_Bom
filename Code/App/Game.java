@@ -39,7 +39,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Background;
@@ -57,6 +57,7 @@ public class Game {
     private Clip clip;
     private AudioInputStream music;
     private List<Integer> listScore = new ArrayList<>();
+    private List<KeyCode> input = new ArrayList<>();
     private Entity[][] map;
     private Player player;
     private List<Enemy> enemies;
@@ -427,6 +428,15 @@ public class Game {
                         health3.setVisible(player.getHealth() >= 3);
 
                         // moveable
+                        if (input.contains(KeyCode.LEFT))
+                            player.moveLeft(map);
+                        if (input.contains(KeyCode.RIGHT))
+                            player.moveRight(map);
+                        if (input.contains(KeyCode.UP))
+                            player.moveUp(map);
+                        if (input.contains(KeyCode.DOWN))
+                            player.moveDown(map);
+
                         player.render(gc);
                         enemies.forEach(i -> i.render(gc));
                     } catch (Exception e) {
@@ -458,31 +468,17 @@ public class Game {
             // setup main scene
             scene = new Scene(menuPane);
             scene.getStylesheets().add(getClass().getResource("GUI.css").toExternalForm());
-            scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-                @Override
-                public void handle(KeyEvent event) {
-                    switch (event.getCode()) {
-                        case LEFT:
-                            player.moveLeft(map);
-                            break;
-                        case RIGHT:
-                            player.moveRight(map);
-                            break;
-                        case UP:
-                            player.moveUp(map);
-                            break;
-                        case DOWN:
-                            player.moveDown(map);
-                            break;
-                        case SPACE:
-                            map[(player.getY()+CELLS_SIZE/2)/CELLS_SIZE][(player.getX()+CELLS_SIZE/2)/CELLS_SIZE]
-                                = new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
-                                    ((player.getY()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE);
-                            break;
-                        default:
-                            break;
-                    }
-                }
+            scene.setOnKeyPressed(event -> {
+                if (event.getCode() == KeyCode.SPACE)
+                    map[(player.getY()+CELLS_SIZE/2)/CELLS_SIZE][(player.getX()+CELLS_SIZE/2)/CELLS_SIZE]
+                        = new Bom(((player.getX()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE,
+                            ((player.getY()+CELLS_SIZE/2) / CELLS_SIZE) * CELLS_SIZE);
+                else if (!input.contains(event.getCode()))
+                    input.add(event.getCode());
+            });
+            scene.setOnKeyReleased(event -> {
+                if (event.getCode() != KeyCode.SPACE)
+                    input.remove(event.getCode());
             });
         
             // sound
