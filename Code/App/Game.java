@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
@@ -25,6 +24,7 @@ import Code.Entity.Non_moveable.Items.increaseRange;
 import Code.Entity.Non_moveable.Items.speedUp;
 import Code.Entity.ShortLife.Bom;
 import Code.Entity.ShortLife.Fire;
+import edu.princeton.cs.algs4.SET;
 import edu.princeton.cs.algs4.StdRandom;
 import javafx.animation.AnimationTimer;
 import javafx.collections.FXCollections;
@@ -150,7 +150,7 @@ public class Game {
             }
         });
 
-        menuSettingBtn = newButton("Setting", 120, 30, 70, 240 - 70);
+        menuSettingBtn = newButton("Options", 120, 30, 70, 240 - 70);
         menuSettingBtn.setOnMouseClicked(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
@@ -323,12 +323,13 @@ public class Game {
         ImageView bronze = newImageView(new Image("Resources/icons/bronzeMedal.png"), 35, 20, 455, 150);
         
         ObservableList<Object> c = FXCollections.observableArrayList();
-        List<Integer> copy = new ArrayList<>();
+        SET<Integer> copy = new SET<>();
         for (int i: listScore)
             copy.add(i);
-        copy.sort(Collections.reverseOrder());
-        for (int i = 0; i < 3 && i < copy.size(); i++)
-            c.add(copy.get(i));
+        for (int i = 0; i < 3 && i < copy.size(); i++) {
+            c.add(copy.max());
+            copy.delete(copy.max());
+        }
         highestScore.setItems(c);
 
         BTMenu = newButton("Back to menu", 120, 31, 476, 361);
