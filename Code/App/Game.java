@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.lang.model.element.Element;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -51,7 +53,7 @@ import javafx.scene.text.Font;
 
 public class Game {
     private BackgroundImage background = new BackgroundImage(new Image("./Resources/icons/background.jpg"), BackgroundRepeat.REPEAT, BackgroundRepeat.NO_REPEAT, BackgroundPosition.DEFAULT, BackgroundSize.DEFAULT);
-    public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30;
+    public static final int WIDTH = 20, HEIGHT = 12, CELLS_SIZE = 30, FPS = 30, TPS = 30;
     private String mapPath;
     private Scene scene;
     private Clip clip;
@@ -63,7 +65,9 @@ public class Game {
     private List<Enemy> enemies;
 
     /** main loop */
-    AnimationTimer loop;
+    private boolean isPlaying = true;
+    private AnimationTimer loop;
+    private Thread drawThread, tickThread;
     final String TEXT_FILL = "-fx-text-fill: #fff;";
     
     /** play */
@@ -218,7 +222,7 @@ public class Game {
             @Override
             public void handle(MouseEvent event) {
                 playPausePane.setVisible(false);
-                run();
+                resume();
             }
         });
     
@@ -388,6 +392,8 @@ public class Game {
 
     private void setupGame() {
         try {
+            resumeBtn.setDisable(false);
+
             // khởi tạo main loop
             loop = new AnimationTimer() {
                 @Override
@@ -397,11 +403,12 @@ public class Game {
                             end();
 
                         // back grass
+                        Image grass = new Image("./Resources/icons/grass.png");
                         for (int i = 0; i < HEIGHT; i++)
                             for (int j = 0; j < WIDTH; j++)
-                                gc.drawImage(new Image("./Resources/icons/grass.png"), j*CELLS_SIZE, i*CELLS_SIZE);
+                                gc.drawImage(grass, j*CELLS_SIZE, i*CELLS_SIZE);
 
-                        checkTouchEnemy();
+                        //checkTouchEnemy();
 
                         // enemies
                         enemies.forEach(i -> {
@@ -446,12 +453,156 @@ public class Game {
                 }
             };
 
+            /* tickThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        while (isPlaying) {
+                            if (!player.isAlive() || enemies.isEmpty())
+                                end();
+
+                            checkTouchEnemy();
+
+                            // enemies
+                            for (int i = 0; i < enemies.size(); i++) {
+                                if (enemies.get(i).isAlive())
+                                    enemies.get(i).move(map);
+                                else {
+                                    enemies.remove(i);
+                                    i--;
+                                }
+                            }
+
+                            // map
+                            for (int i = 0; i < HEIGHT; i++)
+                                for (int j = 0; j < WIDTH; j++)
+                                    if (map[i][j] != null)
+                                        if (map[i][j].isAlive()) {
+                                            map[i][j].update(player);
+                                        } else {
+                                            if (map[i][j] instanceof Bom) {
+                                                ignite(i, j);
+                                            } else map[i][j] = null;
+                                        }
+
+                            // moveable
+                            if (input.contains(KeyCode.LEFT))
+                                player.moveLeft(map);
+                            if (input.contains(KeyCode.RIGHT))
+                                player.moveRight(map);
+                            if (input.contains(KeyCode.UP))
+                                player.moveUp(map);
+                            if (input.contains(KeyCode.DOWN))
+                                player.moveDown(map);
+                            
+                            Thread.sleep(30);
+                        }
+                    } catch (Exception e) {
+                        System.out.print(e.getMessage());
+                    }
+                }
+            }); */
+            tickThread = new Thread() {
+                public void run() {
+                    while (true) {
+                        if (isPlaying) {
+                            try {
+                                long start = System.nanoTime();
+                                if (!player.isAlive() || enemies.isEmpty())
+                                    end();
+
+                                checkTouchEnemy();
+
+                                // enemies
+                                for (int i = 0; i < enemies.size(); i++) {
+                                    if (enemies.get(i).isAlive())
+                                        enemies.get(i).move(map);
+                                    else {
+                                        enemies.remove(i);
+                                        i--;
+                                    }
+                                }
+                                
+                                // map
+                                for (int i = 0; i < HEIGHT; i++)
+                                    for (int j = 0; j < WIDTH; j++)
+                                        if (map[i][j] != null)
+                                            if (map[i][j].isAlive()) {
+                                                map[i][j].update(player);
+                                            } else {
+                                                if (map[i][j] instanceof Bom) {
+                                                    ignite(i, j);
+                                                } else map[i][j] = null;
+                                            }
+
+                                // moveable
+                                if (input.contains(KeyCode.LEFT))
+                                    player.moveLeft(map);
+                                if (input.contains(KeyCode.RIGHT))
+                                    player.moveRight(map);
+                                if (input.contains(KeyCode.UP))
+                                    player.moveUp(map);
+                                if (input.contains(KeyCode.DOWN))
+                                    player.moveDown(map);
+
+                                long elapsed = System.nanoTime() - start;
+                                long sleepTime = elapsed > 1000000000/TPS ? 0 : 1000000000/TPS - elapsed;
+                                Thread.sleep(sleepTime/1000000);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            };
+            tickThread.setDaemon(true);
+
+            drawThread = new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    while (true) {
+                        if (isPlaying) {
+                            long start = System.nanoTime();
+
+                            // back grass
+                            Image grass = new Image("./Resources/icons/grass.png");
+                            for (int i = 0; i < HEIGHT; i++)
+                                for (int j = 0; j < WIDTH; j++)
+                                    gc.drawImage(grass, j*CELLS_SIZE, i*CELLS_SIZE);
+                                    
+                            // map
+                            for (int i = 0; i < HEIGHT; i++)
+                                for (int j = 0; j < WIDTH; j++)
+                                    if (map[i][j] != null && map[i][j].isAlive())
+                                        map[i][j].render(gc);
+                            
+                            // health symbol
+                            health1.setVisible(player.getHealth() >= 1);
+                            health2.setVisible(player.getHealth() >= 2);
+                            health3.setVisible(player.getHealth() >= 3);
+
+                            player.render(gc);
+                            enemies.forEach(i -> i.render(gc));
+
+                            long elapsed = System.nanoTime() - start;
+                            long sleepTime = elapsed > 1000000000/FPS ? 0 : 1000000000/FPS - elapsed;
+                            try {
+                                Thread.sleep(sleepTime/1000000);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }
+            });
+            drawThread.setDaemon(true);
+
             // khởi tạo player
             player = new Player(CELLS_SIZE, CELLS_SIZE);
 
             // khởi tạo map
             loadMap(mapPath);
-            
+
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
@@ -603,19 +754,26 @@ public class Game {
         playPausePane.setVisible(false);
         setupGame();
         loop.start();
+        // isPlaying = true;
+        // drawThread.start();
+        // tickThread.start();
     }
 
     private void pause() {
         loop.stop();
+        // isPlaying = false;
     }
 
-    private void run() {
+    private void resume() {
         loop.start();
+        // isPlaying = true;
     }
 
     private void end() {
         try {
             loop.stop();
+            // isPlaying = false;
+
             listScore.add(getScore());
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(System.getProperty("user.dir") +  "/src/Resources/data/Score.txt")));
             out.writeObject(listScore);
