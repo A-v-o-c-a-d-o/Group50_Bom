@@ -10,8 +10,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.lang.model.element.Element;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -65,7 +63,6 @@ public class Game {
     private List<Enemy> enemies;
 
     /** main loop */
-    private boolean isPlaying = true;
     private AnimationTimer loop;
     private Thread drawThread, tickThread;
     final String TEXT_FILL = "-fx-text-fill: #fff;";
@@ -408,14 +405,17 @@ public class Game {
                             for (int j = 0; j < WIDTH; j++)
                                 gc.drawImage(grass, j*CELLS_SIZE, i*CELLS_SIZE);
 
-                        //checkTouchEnemy();
+                        checkTouchEnemy();
 
                         // enemies
-                        enemies.forEach(i -> {
-                            i.move(map);
-                            if (!i.isAlive())
+                        for (int i = 0; i < enemies.size(); i++) {
+                            if (enemies.get(i).isAlive())
+                                enemies.get(i).move(map);
+                            else {
                                 enemies.remove(i);
-                        });
+                                i--;
+                            }
+                        }
 
                         // map
                         for (int i = 0; i < HEIGHT; i++)
@@ -453,61 +453,12 @@ public class Game {
                 }
             };
 
-            /* tickThread = new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    try {
-                        while (isPlaying) {
-                            if (!player.isAlive() || enemies.isEmpty())
-                                end();
-
-                            checkTouchEnemy();
-
-                            // enemies
-                            for (int i = 0; i < enemies.size(); i++) {
-                                if (enemies.get(i).isAlive())
-                                    enemies.get(i).move(map);
-                                else {
-                                    enemies.remove(i);
-                                    i--;
-                                }
-                            }
-
-                            // map
-                            for (int i = 0; i < HEIGHT; i++)
-                                for (int j = 0; j < WIDTH; j++)
-                                    if (map[i][j] != null)
-                                        if (map[i][j].isAlive()) {
-                                            map[i][j].update(player);
-                                        } else {
-                                            if (map[i][j] instanceof Bom) {
-                                                ignite(i, j);
-                                            } else map[i][j] = null;
-                                        }
-
-                            // moveable
-                            if (input.contains(KeyCode.LEFT))
-                                player.moveLeft(map);
-                            if (input.contains(KeyCode.RIGHT))
-                                player.moveRight(map);
-                            if (input.contains(KeyCode.UP))
-                                player.moveUp(map);
-                            if (input.contains(KeyCode.DOWN))
-                                player.moveDown(map);
-                            
-                            Thread.sleep(30);
-                        }
-                    } catch (Exception e) {
-                        System.out.print(e.getMessage());
-                    }
-                }
-            }); */
             tickThread = new Thread() {
                 public void run() {
                     while (true) {
-                        if (isPlaying) {
                             try {
                                 long start = System.nanoTime();
+
                                 if (!player.isAlive() || enemies.isEmpty())
                                     end();
 
@@ -551,17 +502,15 @@ public class Game {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
-                        }
                     }
                 }
             };
             tickThread.setDaemon(true);
 
-            drawThread = new Thread(new Runnable() {
-                @Override
+            drawThread = new Thread() {
                 public void run() {
                     while (true) {
-                        if (isPlaying) {
+                        try {
                             long start = System.nanoTime();
 
                             // back grass
@@ -591,10 +540,12 @@ public class Game {
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                        } catch (Exception e) {
+                            System.out.println(e.getMessage());
                         }
                     }
                 }
-            });
+            };
             drawThread.setDaemon(true);
 
             // khởi tạo player
@@ -754,25 +705,27 @@ public class Game {
         playPausePane.setVisible(false);
         setupGame();
         loop.start();
-        // isPlaying = true;
-        // drawThread.start();
-        // tickThread.start();
+        //drawThread.start();
+        //tickThread.start();
     }
 
     private void pause() {
         loop.stop();
-        // isPlaying = false;
+        //tickThread.suspend();
+        //drawThread.suspend();
     }
 
     private void resume() {
         loop.start();
-        // isPlaying = true;
+        //tickThread.resume();
+        //drawThread.resume();
     }
 
     private void end() {
         try {
             loop.stop();
-            // isPlaying = false;
+            //tickThread.suspend();
+            //drawThread.suspend();
 
             listScore.add(getScore());
             ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(new File(System.getProperty("user.dir") +  "/src/Resources/data/Score.txt")));

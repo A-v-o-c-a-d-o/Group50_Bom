@@ -7,8 +7,8 @@ w-b---------b---b--w
 wb----b-----b--bw-ww
 w-b---------b---b--w
 w-w--b-------b--w-ww
-w-wbw-bwbwb-b-wbw--w
-wb-b-b-----b-b-b-b-w
+w-wbw-bwbwbwb-wbw--w
+wb-b-b-------b-b-b-w
 wwwwwwwwwwwwwwwwwwww
 18 1
 15 1
